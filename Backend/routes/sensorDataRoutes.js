@@ -1,20 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const sensorDataController = require('../controllers/sensorDataController.js');
+const { getAllSensorData, getSensorDataById, createSensorData, updateSensorData, deleteSensorData } = require('../controllers/sensorDataController.js');
 
 // Get all sensor data
-router.get('/', sensorDataController.getAllSensorData);
+router.get('/', getAllSensorData);
 
 // Get sensor data by ID
-router.get('/:id', sensorDataController.getSensorDataById);
+router.get('/:id', getSensorDataById);
 
 // Create new sensor data
-router.post('/', sensorDataController.createSensorData);
+router.post('/', createSensorData);
 
 // Update sensor data by ID
-router.put('/:id', sensorDataController.updateSensorData);
+router.put('/:id', updateSensorData);
 
 // Delete sensor data by ID
-router.delete('/:id', sensorDataController.deleteSensorData);
+router.delete('/:id', deleteSensorData);
 
 module.exports = router;

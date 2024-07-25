@@ -1,6 +1,6 @@
 const SensorData = require('../models/sensorDataModel');
 
-exports.getAllSensorData = async (req, res) => {
+const getAllSensorData = async (req, res) => {
     try {
         const data = await SensorData.find().populate('sensorId');
         res.status(200).json(data);
@@ -9,7 +9,7 @@ exports.getAllSensorData = async (req, res) => {
     }
 };
 
-exports.getSensorDataById = async (req, res) => {
+const getSensorDataById = async (req, res) => {
     try {
         const data = await SensorData.findById(req.params.id).populate('sensorId');
         if (!data) {
@@ -21,7 +21,7 @@ exports.getSensorDataById = async (req, res) => {
     }
 };
 
-exports.createSensorData = async (req, res) => {
+const createSensorData = async (req, res) => {
     try {
         const newData = new SensorData(req.body);
         const savedData = await newData.save();
@@ -31,7 +31,7 @@ exports.createSensorData = async (req, res) => {
     }
 };
 
-exports.updateSensorData = async (req, res) => {
+const updateSensorData = async (req, res) => {
     try {
         const updatedData = await SensorData.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!updatedData) {
@@ -43,7 +43,7 @@ exports.updateSensorData = async (req, res) => {
     }
 };
 
-exports.deleteSensorData = async (req, res) => {
+const deleteSensorData = async (req, res) => {
     try {
         const deletedData = await SensorData.findByIdAndDelete(req.params.id);
         if (!deletedData) {
@@ -53,4 +53,12 @@ exports.deleteSensorData = async (req, res) => {
     } catch (error) {
         res.status(500).send(error.message);
     }
+};
+
+module.exports = {
+    deleteSensorData,
+    updateSensorData,
+    createSensorData,
+    getSensorDataById,
+    getAllSensorData
 };

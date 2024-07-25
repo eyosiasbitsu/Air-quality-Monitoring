@@ -1,6 +1,6 @@
 const Sensor = require('../models/sensorModel');
 
-exports.getAllSensors = async (req, res) => {
+const getAllSensors = async (req, res) => {
     try {
         const sensors = await Sensor.find();
         res.status(200).json(sensors);
@@ -9,7 +9,7 @@ exports.getAllSensors = async (req, res) => {
     }
 };
 
-exports.getSensorById = async (req, res) => {
+const getSensorById = async (req, res) => {
     try {
         const sensor = await Sensor.findById(req.params.id);
         if (!sensor) {
@@ -21,7 +21,7 @@ exports.getSensorById = async (req, res) => {
     }
 };
 
-exports.createSensor = async (req, res) => {
+const createSensor = async (req, res) => {
     try {
         const newSensor = new Sensor(req.body);
         const savedSensor = await newSensor.save();
@@ -31,7 +31,7 @@ exports.createSensor = async (req, res) => {
     }
 };
 
-exports.updateSensor = async (req, res) => {
+const updateSensor = async (req, res) => {
     try {
         const updatedSensor = await Sensor.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!updatedSensor) {
@@ -43,7 +43,7 @@ exports.updateSensor = async (req, res) => {
     }
 };
 
-exports.deleteSensor = async (req, res) => {
+const deleteSensor = async (req, res) => {
     try {
         const deletedSensor = await Sensor.findByIdAndDelete(req.params.id);
         if (!deletedSensor) {
@@ -53,4 +53,12 @@ exports.deleteSensor = async (req, res) => {
     } catch (error) {
         res.status(500).send(error.message);
     }
+};
+
+module.export = {
+    getAllSensors,
+    getSensorById,
+    createSensor,
+    updateSensor,
+    deleteSensor
 };
