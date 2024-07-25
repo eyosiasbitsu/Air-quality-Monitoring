@@ -55,7 +55,7 @@ const deleteSensor = async (req, res) => {
     }
 };
 
-module.export = {
+module.exports = {
     getAllSensors,
     getSensorById,
     createSensor,
