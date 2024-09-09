@@ -9,7 +9,11 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Database connection
-connectDB();
+connectDB().then(() => {
+    console.log("Database connected successfully!");
+}).catch(err => {
+    console.error("Database connection failed:", err.message);
+});
 
 // Middleware
 app.use(cors()); // Enable CORS
