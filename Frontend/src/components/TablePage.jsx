@@ -1,13 +1,17 @@
-import React from 'react';
-import TableComponent from './TableComponent';
-import { useOutletContext } from 'react-router-dom';
+import React from "react";
+import TableComponent from "./TableComponent";
+import { useOutletContext } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getSensorData, getSensors } from "../../services/sensorsApi";
+import Spinner from "./Spinner";
 
-const TablePage = () => {
-    const { filteredData } = useOutletContext();
-
-    return (
-        <TableComponent data={filteredData} />
-    );
+const TablePage = ({ filteredData }) => {
+  const { data, isLoading } = useQuery({
+    queryKey: ["sensorData"],
+    queryFn: getSensorData,
+  });
+  if (isLoading) return <Spinner />;
+  return <TableComponent data={filteredData} />;
 };
 
 export default TablePage;

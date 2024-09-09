@@ -4,8 +4,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        "custom-blue": "#2179E1", // Replace with your blue color
-        "custom-green": "#10b981", // Replace with your green color
+        "custom-blue": "#4489b9", // Replace with your blue color
+        "custom-green": "#699e97", // Replace with your green color
       },
     },
   },
