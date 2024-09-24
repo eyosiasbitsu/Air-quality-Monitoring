@@ -1,7 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
+
 const sensorRoutes = require('./routes/sensorRoutes');
 const sensorDataRoutes = require('./routes/sensorDataRoutes');
+const userRoutes = require('./routes/userRoutes');
+
 const cors = require('cors');
 const connectDB = require("./config/database");
 
@@ -19,9 +22,16 @@ connectDB().then(() => {
 app.use(cors()); // Enable CORS
 app.use(express.json()); // Parse JSON bodies
 
+// Log incoming request body for debugging
+app.use((req, res, next) => {
+    console.log(`Incoming request data: ${JSON.stringify(req.body)}`);
+    next();
+});
+
 // Routes
 app.use('/sensors', sensorRoutes);
 app.use('/sensorData', sensorDataRoutes);
+app.use('/user', userRoutes);
 
 // Catch-all route for handling 404 errors
 app.use((req, res) => {

@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const {getAllSensors, getSensorById, createSensor, updateSensor, deleteSensor} = require('../controllers/sensorController');
 
+const authMiddleware = require('../middleware/authMiddleware');
+
 // Get all sensors
 router.get('/', getAllSensors);
 
