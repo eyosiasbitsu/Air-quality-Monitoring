@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 
 export default function BackGround() {
   return (
-    <div className="text-gray-600  mx-[13%]">
+    <div className="text-gray-600  mx-[5%]">
       <Header />
       <Outlet />
       <Footer />

@@ -9,6 +9,14 @@ import RegisterSensor from "./components/RegisterSensor";
 import BackGround from "./pages/BackGround";
 
 const App = () => {
+  const backgroundStyle = {
+    backgroundImage: "url('/cleanAir.jpeg')",
+    height: "100%",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+  };
+
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -20,18 +28,20 @@ const App = () => {
   });
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <Router>
-        <Routes>
-          <Route path="/" element={<BackGround />}>
-            <Route index element={<DashboardLayout />}></Route>
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/register" element={<RegisterSensor />} />
-          </Route>
-        </Routes>
-      </Router>
-    </QueryClientProvider>
+    <div style={backgroundStyle}>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <Router>
+          <Routes>
+            <Route path="/" element={<BackGround />}>
+              <Route index element={<DashboardLayout />}></Route>
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/register" element={<RegisterSensor />} />
+            </Route>
+          </Routes>
+        </Router>
+      </QueryClientProvider>
+    </div>
   );
 };
 
