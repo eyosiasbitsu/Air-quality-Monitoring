@@ -68,8 +68,8 @@ const DashboardLayout = () => {
   );
 
   return (
-    <div className="min-h-screen bg-inherit flex gap-8  flex-row items-center  font-[Prata] justify-around w-[100%]">
-      <button className="hover:bg-gray-600 text-gray-300 font-bold py-6 rounded-3xl px-4  bg-inherit shadow-2xl backdrop-blur-3xl backdrop-brightness-125  min-w-[250px]  ">
+    <div className=" bg-inherit flex gap-8  flex-row items-start  font-[Prata] justify-around w-[100%]">
+      <button className="hover:bg-gray-600 text-gray-300 font-bold py-6 rounded-3xl px-4 mt-10  bg-inherit shadow-2xl backdrop-blur-3xl backdrop-brightness-125  min-w-[250px]  ">
         <div className="backdrop-brightness-75 py-2 px-3 text-xs flex items-center justify-between w-fit gap-5">
           <div>Registor a new sensor</div>
           <IoMdAdd color="gray" size="1.5rem" />
