@@ -7,7 +7,7 @@ const userRoutes = require('./routes/userRoutes');
 
 const cors = require('cors');
 const connectDB = require("./config/database");
-
+const initFirebaseSync = require('./services/firebaseSync');
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -17,6 +17,8 @@ connectDB().then(() => {
 }).catch(err => {
     console.error("Database connection failed:", err.message);
 });
+
+initFirebaseSync();
 
 // Middleware
 app.use(cors()); // Enable CORS
