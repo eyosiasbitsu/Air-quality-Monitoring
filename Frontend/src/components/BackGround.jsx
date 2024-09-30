@@ -1,11 +1,11 @@
 import React from "react";
 import { Outlet } from "react-router";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Header from "./Header";
+import Footer from "./Footer";
 
 export default function BackGround() {
   return (
-    <div className="text-gray-600  mx-[5%]">
+    <div className="text-gray-600  mx-[15%] flex-col justify-center">
       <Header />
       <Outlet />
       <Footer />

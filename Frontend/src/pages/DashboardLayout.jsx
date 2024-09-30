@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import TablePage from "./TablePage";
+import TablePage from "../components/TablePage";
 import { IoMdAdd } from "react-icons/io";
 
 const DashboardLayout = () => {
@@ -68,11 +68,11 @@ const DashboardLayout = () => {
   );
 
   return (
-    <div className=" bg-inherit flex gap-8  flex-row items-start  font-[Prata] justify-around w-[100%]">
-      <button className="hover:bg-gray-600 text-gray-300 font-bold py-6 rounded-3xl px-4 mt-10  bg-inherit shadow-2xl backdrop-blur-3xl backdrop-brightness-125  min-w-[250px]  ">
-        <div className="backdrop-brightness-75 py-2 px-3 text-xs flex items-center justify-between w-fit gap-5">
+    <div className=" bg-inherit flex gap-8  flex-row items-start  font-[Prata] justify-around w-[100%] min-h-[90vh] pt-20 p-10">
+      <button className="hover:bg-gray-700 text-black font-bold py-6 rounded-3xl px-4 mt-10  bg-gray-600 opacity-70 shadow-2xl backdrop-blur-3xl   min-w-[250px]  ">
+        <div className="backdrop-brightness-75 py-2 px-3 text-xs flex items-center justify-between w-fit gap-5 rounded-lg">
           <div>Registor a new sensor</div>
-          <IoMdAdd color="gray" size="1.5rem" />
+          <IoMdAdd color="black" size="1.5rem" />
         </div>
       </button>
       <TablePage filteredData={filteredData} />
