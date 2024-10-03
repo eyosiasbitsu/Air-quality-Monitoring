@@ -10,8 +10,10 @@ const TablePage = ({ filteredData }) => {
     queryKey: ["sensorData"],
     queryFn: getSensorData,
   });
+
+  console.log(data);
   if (isLoading) return <Spinner />;
-  return <TableComponent data={filteredData} />;
+  return <TableComponent data={data} />;
 };
 
 export default TablePage;

@@ -24,7 +24,7 @@ const TableComponent = ({ data }) => {
               <td className="py-4 px-4 text-sm">{row.sensors}</td>
               <td className="py-4 px-4">
                 <div className="min-w-12 text-center bg-gray-200 text-gray-800 w-fit text-xs rounded-lg px-2 py-1">
-                  {row.spi}{" "}
+                  {row.spi}
                 </div>
               </td>
               <td className="py-4 px-4">
@@ -39,7 +39,7 @@ const TableComponent = ({ data }) => {
               </td>
               <td className="py-4 px-4">
                 <div className="min-w-12 text-center bg-gray-200 text-gray-800 w-fit text-xs rounded-lg px-2 py-1">
-                  {row.city}{" "}
+                  {row.pm25}{" "}
                 </div>
               </td>
             </tr>

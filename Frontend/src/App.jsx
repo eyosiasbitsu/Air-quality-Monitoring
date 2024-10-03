@@ -34,10 +34,10 @@ const App = () => {
         <Router>
           <Routes>
             <Route path="/" element={<BackGround />}>
-              <Route index element={<DashboardLayout />}></Route>
+              <Route index element={<SensorData />}></Route>
               <Route path="/signin" element={<SignIn />} />
               <Route path="/register" element={<RegisterSensor />} />
-              <Route path="/sensordata" element={<SensorData />} />
+              <Route path="/sensordata" element={<DashboardLayout />} />
             </Route>
           </Routes>
         </Router>
