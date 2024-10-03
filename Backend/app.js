@@ -8,7 +8,6 @@ const userRoutes = require("./routes/userRoutes");
 
 const cors = require("cors");
 const connectDB = require("./config/database");
-
 const app = express();
 const port = process.env.PORT || 3000;
 
