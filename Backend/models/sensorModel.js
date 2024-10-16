@@ -2,7 +2,11 @@ const mongoose = require("mongoose");
 const SensorData = require("./sensorDataModel");
 
 const sensorSchema = new mongoose.Schema({
-  location: {
+  lat: {
+    type: String,
+    required: true,
+  },
+  lng: {
     type: String,
     required: true,
   },
@@ -13,13 +17,7 @@ const sensorSchema = new mongoose.Schema({
   city: {
     type: String,
     required: true,
-  },
-  sensorData: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "SensorData",
-    },
-  ],
+  }
 });
 
 const Sensor = mongoose.model("Sensor", sensorSchema);
