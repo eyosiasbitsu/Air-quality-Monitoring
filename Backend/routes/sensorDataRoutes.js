@@ -17,6 +17,6 @@ router.put('/:id', updateSensorData);
 // Delete sensor data by ID
 router.delete('/:id', deleteSensorData);
 
-router.post('/locate' , getSensorDataBYLocation)
+router.get('/locate' , getSensorDataBYLocation)
 
 module.exports = router;

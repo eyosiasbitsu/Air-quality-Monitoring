@@ -33,7 +33,6 @@ function LocationMarker({ position, onMapClick }) {
 function MyMap() {
   const [position, setPosition] = useState(null);
   const [searchText, setSearchText] = useState('');
-console.log(position)
   // Fetch the name of a location based on latitude and longitude (reverse geocoding)
   const fetchLocationName = (lat, lng) => {
     fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
@@ -67,7 +66,7 @@ console.log(position)
   };
 
   const { data: sensorData, isLoading, error } = useQuery({
-    queryKey: ['sensorDataMap', position], // Pass query key in the object
+    queryKey: ['sensorDataMap'], // Pass query key in the object
     queryFn: () => getSensorDataBYLocation(position), // Define the query function
     enabled: !!position, // Enable the query when 'position' is available
     retry: false, // Optionally disable retrying on failure

@@ -16,20 +16,17 @@ export const getSensorData = async () => {
 
 
 export const getSensorDataBYLocation = async (position) => {
-  console.log(position)
+  const {lat,lng} = position
   const fetchedSensors = await fetch(
-    `${import.meta.env.VITE_BACKEND_URL}/sensorData/locate`,
+    `${import.meta.env.VITE_BACKEND_URL}/sensorData/locate?lng=${lng}&lat=${lat}`,
     {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(position),
+      method: "GET",
     }
   );
 
-  const response= fetchedSensors.json();
+  const response=await  fetchedSensors.json();
   console.log(response)
+  return response
 };
 
 export const newSensor = async (newSensor) => {

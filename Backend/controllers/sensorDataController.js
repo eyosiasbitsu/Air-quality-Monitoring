@@ -21,12 +21,11 @@ const getSensorDataById = async (req, res) => {
         res.status(500).send(error.message);
     }
 };
-
 // Controller function to get sensor data by location
 const getSensorDataBYLocation = async (req, res) => {
     try {
       // Ensure latitude and longitude are provided
-      const { lat, lng } = req.body;
+      const { lng, lat } = req.query;
       if (!lat || !lng) {
         return res.status(400).json({ message: "Please provide both latitude and longitude" });
       }
@@ -49,14 +48,19 @@ const getSensorDataBYLocation = async (req, res) => {
   
       // Check if a nearby sensor was found
       if (nearbySensor) {
+        // Ensure nearbySensor._id is a valid ObjectId
+        if (!nearbySensor._id || !mongoose.Types.ObjectId.isValid(nearbySensor._id)) {
+          return res.status(400).json({ message: "Invalid sensor ID" });
+        }
+  
         // Find the sensor data for the matching sensor
         const sensorData = await SensorData.find({ sensorId: nearbySensor._id });
   
         // Return the sensor data
-        if (sensorData) {
+        if (sensorData && sensorData.length > 0) {
           return res.json(sensorData);
         } else {
-          return res.status(404).json({ message: "No sensor data found for this sensor" });
+          return res.status(404).json({ message: "No sensor data found for this location" });
         }
       } else {
         return res.status(404).json({ message: "There is no nearby sensor" }); // No nearby sensor found
@@ -67,7 +71,7 @@ const getSensorDataBYLocation = async (req, res) => {
       res.status(500).send(error.message); // Return the error message
     }
   };
-
+  
 const createSensorData = async (req, res) => {
     try {
         const newData = new SensorData(req.body);
