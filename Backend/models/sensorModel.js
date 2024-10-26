@@ -18,7 +18,17 @@ const sensorSchema = new mongoose.Schema({
     type: String,
     required: true,
   }
+},
+{
+  toJSON:{virtuals:true},
+  toObject:{virtuals:true}
 });
+
+sensorSchema.virtual("sensorData",{
+  ref: "SensorData",
+  foreignField: "sensorId",
+  localField: "_id"
+})
 
 const Sensor = mongoose.model("Sensor", sensorSchema);
 

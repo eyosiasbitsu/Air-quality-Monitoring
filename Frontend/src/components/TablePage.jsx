@@ -11,7 +11,6 @@ const TablePage = ({ filteredData }) => {
     queryFn: getSensorData,
   });
 
-  console.log(data);
   if (isLoading) return <Spinner />;
   return <TableComponent data={data} />;
 };

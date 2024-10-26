@@ -1,5 +1,6 @@
 const SensorData = require('../models/sensorDataModel');
 const Sensor = require('../models/sensorModel');
+const mongoose = require("mongoose");
 
 const getAllSensorData = async (req, res) => {
     try {
@@ -22,55 +23,52 @@ const getSensorDataById = async (req, res) => {
     }
 };
 // Controller function to get sensor data by location
-const getSensorDataBYLocation = async (req, res) => {
+const getSensorDataByLocation = async (req, res) => {
     try {
-      // Ensure latitude and longitude are provided
-      const { lng, lat } = req.query;
-      if (!lat || !lng) {
-        return res.status(400).json({ message: "Please provide both latitude and longitude" });
-      }
-  
-      const reqLatitude = parseFloat(lat);
-      const reqLongitude = parseFloat(lng);
-  
-      // Fetch all sensors
-      const sensors = await Sensor.find();
-  
-      // Find the first nearby sensor
-      const nearbySensor = sensors.find(sensor => {
-        const sensorLatitude = parseFloat(sensor.lat);
-        const sensorLongitude = parseFloat(sensor.lng);
-  
-        // Check if the absolute difference is less than 0.027 for both latitude and longitude
-        return Math.abs(sensorLatitude - reqLatitude) < 0.027 &&
-               Math.abs(sensorLongitude - reqLongitude) < 0.027;
-      });
-  
-      // Check if a nearby sensor was found
-      if (nearbySensor) {
+        // Ensure latitude and longitude are provided
+        const { lng, lat } = req.query;
+        if (!lat || !lng) {
+            return res.status(400).json({ message: "Please provide both latitude and longitude" });
+        }
+
+        const reqLatitude = parseFloat(lat);
+        const reqLongitude = parseFloat(lng);
+        const proximity = 0.027; // Define proximity bounds for latitude and longitude
+
+        // Fetch nearby sensors within a specified latitude and longitude range
+        const sensors = await Sensor.find({
+            lat: { $gte: reqLatitude - proximity, $lte: reqLatitude + proximity },
+            lng: { $gte: reqLongitude - proximity, $lte: reqLongitude + proximity }
+        });
+
+        // Check if any nearby sensors were found
+        if (!sensors.length) {
+            return res.status(404).json({ message: "There is no nearby sensor" });
+        }
+
+        // Assuming you are interested in data from the first nearby sensor found
+        const nearbySensor = sensors[0]; // Consider closest sensor, for example
+
         // Ensure nearbySensor._id is a valid ObjectId
         if (!nearbySensor._id || !mongoose.Types.ObjectId.isValid(nearbySensor._id)) {
-          return res.status(400).json({ message: "Invalid sensor ID" });
+            return res.status(400).json({ message: "Invalid sensor ID" });
         }
-  
+
         // Find the sensor data for the matching sensor
         const sensorData = await SensorData.find({ sensorId: nearbySensor._id });
-  
+
         // Return the sensor data
         if (sensorData && sensorData.length > 0) {
-          return res.json(sensorData);
+            return res.json(sensorData);
         } else {
-          return res.status(404).json({ message: "No sensor data found for this location" });
+            return res.status(404).json({ message: "No sensor data found for this location" });
         }
-      } else {
-        return res.status(404).json({ message: "There is no nearby sensor" }); // No nearby sensor found
-      }
-  
     } catch (error) {
-      console.error(error);
-      res.status(500).send(error.message); // Return the error message
+        console.error(error);
+        res.status(500).send(error.message); // Return the error message
     }
-  };
+};
+
   
 const createSensorData = async (req, res) => {
     try {
@@ -112,5 +110,5 @@ module.exports = {
     createSensorData,
     getSensorDataById,
     getAllSensorData,
-    getSensorDataBYLocation
+    getSensorDataByLocation
 };
