@@ -11,7 +11,7 @@ const getAllSensors = async (req, res) => {
 
 const getSensorById = async (req, res) => {
     try {
-        const sensor = await Sensor.findById(req.params.id);
+        const sensor = await Sensor.findById(req.params.id).populate({path:"sensorData"});
         if (!sensor) {
             return res.status(404).send('Sensor not found');
         }

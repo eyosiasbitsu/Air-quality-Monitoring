@@ -14,11 +14,15 @@ const sensorDataSchema = new mongoose.Schema({
   pm25: {
     type: String,
   },
+  date:{
+    type:Date,
+    default:Date.now
+  },
   sensorId: {
     type: ObjectId,
     ref: "Sensor",
-  },
-});
+  }}
+);
 
 const SensorData = mongoose.model("SensorData", sensorDataSchema);
 

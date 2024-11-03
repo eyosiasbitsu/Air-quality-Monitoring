@@ -19,13 +19,10 @@ const SignIn = () => {
 
   const handleSubmit = (e) => {};
   return (
-    <div className="flex items-center justify-center mt-10 mb-36 bg-inherit p-8 text-gray-100">
+    <div className="flex items-center justify-center mt-10 mb-36 px-0 bg-inherit py-8 md:p-8 text-gray-100">
       <div
-        className=" bg-inherit shadow-lg rounded-3xl py-8 px-32 backdrop-blur-2xl"
-        style={{
-          width: "45vw",
-          height: "60vh", // 60% of the viewport width
-        }}
+        className=" bg-inherit shadow-lg rounded-3xl py-8 md:px-32 backdrop-blur-2xl w-[100vw] md:w-[45vw] md:h-[60vh] px-4"
+       
       >
         <h2 className="text-3xl font-bold mb-6 text-center">Sign In</h2>
         <form className="flex flex-col items-start">
@@ -33,7 +30,7 @@ const SignIn = () => {
             <input
               type="text"
               placeholder="email"
-              className="border rounded-md px-2 py-2 w-full bg-inherit backdrop-brightness-50"
+              className="border rounded-md px-2 py-1 md:py-2 w-full bg-inherit backdrop-brightness-50"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -41,7 +38,7 @@ const SignIn = () => {
               <input
                 type={passwordVisible ? "text" : "password"}
                 placeholder="Password"
-                className="border bg-inherit rounded-md px-2 py-2 w-full pr-16 backdrop-brightness-50"
+                className="border bg-inherit rounded-md px-2 py-1 md:py-2 w-full pr-16 backdrop-brightness-50"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               ></input>
@@ -69,8 +66,7 @@ const SignIn = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="bg-gray-100 opacity-30 hover:bg-gray-300 text-gray-700 font-bold py-0 px-6 mt-3 mb-7 rounded-full"
-            style={{ height: "40px", width: "60%" }} // Ensure button height is 44px
+            className="bg-gray-100 opacity-30 hover:bg-gray-300 text-gray-700 font-bold py-0 px-6 mt-3 mb-7 rounded-full h-9 w-32 md:h-[40px] md:w-[60%]"// Ensure button height is 44px
             onClick={(e) => {
               e.preventDefault();
               mutate({ email, password });

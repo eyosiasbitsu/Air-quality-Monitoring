@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.map-container {
+    height: 600px;
+    width: 100%; /* Adjust width as needed */
+  }
+  .map-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .location-button {
+    margin-top: 10px;
+  }
+  
