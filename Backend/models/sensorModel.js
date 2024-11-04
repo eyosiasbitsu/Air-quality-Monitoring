@@ -14,6 +14,10 @@ const sensorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  sensorId: {
+    type: String,
+    required: true
+},
   city: {
     type: String,
     required: true,
