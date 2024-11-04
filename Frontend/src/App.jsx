@@ -2,6 +2,8 @@ import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import toast styles
 import DashboardLayout from "./pages/DashboardLayout";
 import SignIn from "./pages/SignIn";
 import RegisterSensor from "./pages/RegisterSensor";
@@ -34,13 +36,19 @@ const App = () => {
         <Router>
           <Routes>
             <Route path="/" element={<BackGround />}>
-              <Route index element={<SensorData />}></Route>
+              <Route index element={<SensorData />} />
               <Route path="/signin" element={<SignIn />} />
               <Route path="/register" element={<RegisterSensor />} />
               <Route path="/sensordata" element={<DashboardLayout />} />
             </Route>
           </Routes>
         </Router>
+        {/* Add ToastContainer for notifications */}
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          // hideProgressBar={false}
+        />
       </QueryClientProvider>
     </div>
   );

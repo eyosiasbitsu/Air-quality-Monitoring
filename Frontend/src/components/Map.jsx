@@ -13,7 +13,6 @@ import Spinner from "./Spinner";
 
 function LocationMarker({ position, onMapClick }) {
   const map = useMap();
-  console.log(position);
 
   function handleDataFetch() {}
 
