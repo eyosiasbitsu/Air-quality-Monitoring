@@ -3,11 +3,22 @@ const serviceAccount = require("../cleanair.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "",
+  databaseURL: "https://cleanair-a01ff.firebaseio.com"
 });
 
 const firestore = admin.firestore();
 
-module.exports = {
-    firestore
-};
+async function listCollections() {
+  try {
+    const collections = await firestore.listCollections();
+    console.log("Collections in the database:");
+
+    collections.forEach(collection => {
+      console.log(`- ${collection.id}`);
+    });
+  } catch (error) {
+    console.error("Error fetching collections:", error);
+  }
+}
+
+listCollections();

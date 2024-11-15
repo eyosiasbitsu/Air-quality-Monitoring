@@ -11,6 +11,32 @@ const connectDB = require("./config/database");
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Swagger setup
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsdoc = require("swagger-jsdoc");
+
+// Swagger options
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "CleanAir API",
+      version: "1.0.0",
+      description: "API documentation for the CleanAir project",
+    },
+    servers: [
+      {
+        url: `http://localhost:${port}`,
+      },
+    ],
+  },
+  apis: ["./routes/*.js"], // Path to the route files where Swagger comments will be added
+};
+
+// Swagger docs setup
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // Database connection
 connectDB()
   .then(() => {
@@ -20,12 +46,9 @@ connectDB()
     console.error("Database connection failed:", err.message);
   });
 
-// Middleware;
+// Middleware
 app.use(cors()); // Enable CORS
-// app.use(express.json()); // Parse JSON bodies
-// app.use(cookieParser());
-// app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
-app.use(express.json());
+app.use(express.json()); // Parse JSON bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Log incoming request body for debugging
