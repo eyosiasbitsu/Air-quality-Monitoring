@@ -1,10 +1,13 @@
 const admin = require("firebase-admin");
 
-let serviceAccount;
-
 try {
-  // Load the `cleanair.json` content from the Render secret file
-  serviceAccount = process.env.FIREBASE_CONFIG;
+  // Check if the FIREBASE_CONFIG environment variable exists
+  if (!process.env.FIREBASE_CONFIG) {
+    throw new Error("FIREBASE_CONFIG environment variable is not defined.");
+  }
+
+  // Parse the JSON string into an object
+  const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
 
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
