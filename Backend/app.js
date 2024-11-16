@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const sensorRoutes = require("./routes/sensorRoutes");
 const sensorDataRoutes = require("./routes/sensorDataRoutes");
 const userRoutes = require("./routes/userRoutes");
+const syncRoutes = require("./routes/syncRoutes");
+
 // const {populateDatabase} = require("./scripts/populateData");
 const cors = require("cors");
 const connectDB = require("./config/database");
@@ -61,7 +63,7 @@ app.use((req, res, next) => {
 app.use("/sensors", sensorRoutes);
 app.use("/sensorData", sensorDataRoutes);
 app.use("/user", userRoutes);
-
+app.use("/sync", syncRoutes);
 // Catch-all route for handling 404 errors
 app.use((req, res) => {
   res.status(404).send("Page not found");
