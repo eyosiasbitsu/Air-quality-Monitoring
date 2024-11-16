@@ -4,7 +4,7 @@ let serviceAccount;
 
 try {
   // Load the `cleanair.json` content from the Render secret file
-  serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
+  serviceAccount = process.env.FIREBASE_CONFIG;
 
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
