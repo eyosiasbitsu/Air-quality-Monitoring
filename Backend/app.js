@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const sensorRoutes = require("./routes/sensorRoutes");
 const sensorDataRoutes = require("./routes/sensorDataRoutes");
 const userRoutes = require("./routes/userRoutes");
-
+// const {populateDatabase} = require("./scripts/populateData");
 const cors = require("cors");
 const connectDB = require("./config/database");
 const app = express();
@@ -70,6 +70,7 @@ app.use((req, res) => {
 // Starting the server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
+  // populateDatabase();
 });
 
 module.exports = app;

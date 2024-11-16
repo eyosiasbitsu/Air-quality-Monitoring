@@ -1,4 +1,4 @@
-const { ObjectId } = require("mongodb");
+
 const mongoose = require("mongoose");
 
 const sensorDataSchema = new mongoose.Schema({
@@ -26,7 +26,7 @@ const sensorDataSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  sensorId: {
+  sensorTag: {
     type: String,
     required: true,
   },

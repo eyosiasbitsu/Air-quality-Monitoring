@@ -1,102 +1,84 @@
-// const SensorData = require("../models/sensorDataModel"); // Importing SensorData model
-// const Sensor = require("../models/sensorModel"); // Importing Sensor model
-// const User = require("../models/userModel"); // Importing User model
+const mongoose = require("mongoose");
+const Sensor = require("../models/sensorModel");
+const SensorData = require("../models/sensorDataModel");
 
-// // Predefined sensor locations in Addis Ababa, Ethiopia
-// const locations = [
-//   { location: "Piassa", streetAddress: "Piassa Main Road", city: "Addis Ababa" },
-//   { location: "Bole", streetAddress: "Bole Road", city: "Addis Ababa" },
-//   { location: "Sar Bet", streetAddress: "Sar Bet Road", city: "Addis Ababa" },
-//   { location: "Merkato", streetAddress: "Merkato Market", city: "Addis Ababa" },
-//   { location: "Cazanchis", streetAddress: "Cazanchis Road", city: "Addis Ababa" },
-//   { location: "Megenagna", streetAddress: "Megenagna Circle", city: "Addis Ababa" },
-//   { location: "Kazanchis", streetAddress: "Kazanchis Road", city: "Addis Ababa" },
-//   { location: "Addis Ketema", streetAddress: "Addis Ketema District", city: "Addis Ababa" },
-//   { location: "Kera", streetAddress: "Kera Road", city: "Addis Ababa" },
-//   { location: "Gotera", streetAddress: "Gotera Junction", city: "Addis Ababa" }
-// ];
+// Predefined real locations in Addis Ababa, Ethiopia
+const locations = [
+  { lat: "9.037", lng: "38.763", streetAddress: "Piassa Main Road", city: "Addis Ababa" },
+  { lat: "9.000", lng: "38.789", streetAddress: "Bole Road", city: "Addis Ababa" },
+  { lat: "9.012", lng: "38.736", streetAddress: "Sar Bet Road", city: "Addis Ababa" },
+  { lat: "8.980", lng: "38.757", streetAddress: "Merkato Market", city: "Addis Ababa" },
+  { lat: "9.033", lng: "38.760", streetAddress: "Cazanchis Road", city: "Addis Ababa" },
+  { lat: "9.045", lng: "38.770", streetAddress: "Megenagna Circle", city: "Addis Ababa" },
+  { lat: "9.035", lng: "38.765", streetAddress: "Kazanchis Road", city: "Addis Ababa" },
+  { lat: "9.025", lng: "38.741", streetAddress: "Addis Ketema District", city: "Addis Ababa" },
+  { lat: "8.995", lng: "38.750", streetAddress: "Kera Road", city: "Addis Ababa" },
+  { lat: "8.970", lng: "38.740", streetAddress: "Gotera Junction", city: "Addis Ababa" },
+];
 
-// // Helper function to generate sensor data based on provided ranges
-// function generateSensorData(sensorId, numberOfEntries = 20) {
-//   const sensorDataEntries = [];
-  
-//   // Simulate 20 entries over the past 20 hours
-//   for (let i = 0; i < numberOfEntries; i++) {
-//     const timestamp = new Date();
-//     timestamp.setHours(timestamp.getHours() - i); // Data for previous hours
+// Helper function to generate sensor data
+function generateSensorData(sensorTag, numberOfEntries = 20) {
+  const sensorDataEntries = [];
+  for (let i = 0; i < numberOfEntries; i++) {
+    const timestamp = new Date();
+    timestamp.setHours(timestamp.getHours() - i);
 
-//     const sensorData = {
-//       temperature: (22.4 + Math.random() * (24.5 - 22.4)).toFixed(2), // Temperature between 22.4°C and 24.5°C
-//       humidity: (47 + Math.random() * (67 - 47)).toFixed(2),          // Humidity between 47% and 67%
-//       pm25: (19 + Math.random() * (23 - 19)).toFixed(2),              // PM2.5 between 19 and 23 µg/m³
-//       spi: (Math.random() * 100).toFixed(2),                          // Random spi value between 0 and 100
-//       sensorId,                                                       // Reference to the sensor
-//       createdAt: timestamp                                             // Timestamp for each entry
-//     };
+    const sensorData = {
+      temperature: (22 + Math.random() * (30 - 22)).toFixed(2), // Temperature between 22°C and 30°C
+      humidity: (40 + Math.random() * (70 - 40)).toFixed(2),     // Humidity between 40% and 70%
+      pm25: (15 + Math.random() * (25 - 15)).toFixed(2),         // PM2.5 between 15 and 25 µg/m³
+      latitude: locations[Math.floor(Math.random() * locations.length)].lat,
+      longitude: locations[Math.floor(Math.random() * locations.length)].lng,
+      createdAt: timestamp,
+      sensorTag, // Use sensorTag here
+    };
 
-//     sensorDataEntries.push(sensorData);
-//   }
+    sensorDataEntries.push(sensorData);
+  }
 
-//   return sensorDataEntries;
-// }
+  return sensorDataEntries;
+}
 
-// async function registerSensorsAndInsertData() {
-//   try {
-//     // Step 1: Check if the user "Fetsum Abyu" exists, create if not
-//     let user = await User.findOne({ email: "eyosiasbitsu@gmail.com" });
+async function populateDatabase() {
+  try {
+    console.log("Populating database with new data...");
+    for (let i = 0; i < 20; i++) {
+      const location = locations[i % locations.length]; // Cycle through locations
+      const sensorTag = `000000${i + 1}`; // Unique sensorTag for each sensor
 
-//     if (!user) {
-//       user = new User({
-//         fullname: "Fetsum Abyu",
-//         email: "eyosiasbitsu@gmail.com",
-//         password: "dummyPassword123" // Placeholder password, should be hashed in real scenarios
-//       });
-//       await user.save();
-//       console.log("User created:", user._id);
-//     } else {
-//       console.log("User already exists:", user._id);
-//     }
+      // Create a new sensor
+      const sensor = new Sensor({
+        lat: location.lat,
+        lng: location.lng,
+        streetAddress: location.streetAddress,
+        city: location.city,
+        sensorTag,
+        sensorData: [], // Initialize empty sensorData array
+      });
+      await sensor.save();
 
-//     // Step 2: Loop through the locations array and create sensors
-//     for (let i = 0; i < locations.length; i++) {
-//       const location = locations[i];
-//       const sensorId = `SENSOR${i + 1}`; // Generating sensorId for each sensor
+      // Generate and link sensor data
+      const sensorDataEntries = generateSensorData(sensorTag);
+      for (const entry of sensorDataEntries) {
+        const sensorData = new SensorData(entry);
+        await sensorData.save();
 
-//       // Check if sensor exists, create it if not
-//       let sensor = await Sensor.findOne({ sensorId });
+        // Push sensor data's `_id` into the sensor's `sensorData` array
+        sensor.sensorData.push(sensorData._id);
+      }
 
-//       if (!sensor) {
-//         sensor = new Sensor({
-//           location: location.location,
-//           streetAddress: location.streetAddress,
-//           city: location.city,
-//           sensorId: sensorId, // Unique sensorId
-//           user: user._id      // Associate with the user
-//         });
-//         await sensor.save();
-//         console.log(`Sensor created at ${location.location}:`, sensor._id);
-//       }
+      // Save the updated sensor document
+      await sensor.save();
+      console.log(`Created sensor and data for: ${sensorTag}`);
+    }
 
-//       // Step 3: Generate sensor data for this sensor based on your friend's data ranges
-//       const sensorDataEntries = generateSensorData(sensor._id);
+    console.log("Database population complete.");
+  } catch (error) {
+    console.error("Error populating the database:", error.message);
+  }
+}
 
-//       // Step 4: Insert each sensor data entry
-//       for (const entry of sensorDataEntries) {
-//         const sensorData = new SensorData(entry);
-//         await sensorData.save();
-//         sensor.sensorData.push(sensorData._id); // Associate sensorData with the sensor
-//       }
-
-//       // Step 5: Save the sensor with its associated sensorData
-//       await sensor.save();
-//       console.log(`Inserted 20 sensor data entries for sensor at ${location.location}`);
-//     }
-
-//     console.log("All sensors and sensor data entries have been inserted successfully.");
-//   } catch (error) {
-//     console.error("Error inserting sensor data:", error);
-//   }
-// }
-
-// // Run the script
-// registerSensorsAndInsertData();
+// Export the function
+module.exports = {
+  populateDatabase,
+};
