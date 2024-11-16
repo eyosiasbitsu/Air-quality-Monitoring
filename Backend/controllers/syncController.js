@@ -33,8 +33,7 @@ const syncSensorData = async (req, res) => {
 
         // Check if the sensorData already exists in MongoDB to avoid duplication
         const existingData = await SensorData.findOne({
-          sensorTag,
-          createdAt: new Date(data.createdAt), // Ensure unique data based on timestamp
+          sensorTag
         });
 
         if (!existingData) {
@@ -66,7 +65,7 @@ const syncSensorData = async (req, res) => {
 
     res.status(200).send("Data synced successfully.");
   } catch (error) {
-    console.error("Error syncing data:", error);
+    console.log("Error syncing data:", error.message);
     res.status(500).send("Error syncing data.");
   }
 };
