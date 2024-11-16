@@ -26,7 +26,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: `http://localhost:${port}`,
+        url: `https://air-quality-monitoring-duxk.onrender.com`,
       },
     ],
   },

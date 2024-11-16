@@ -1,61 +1,40 @@
 const Sensor = require("../models/sensorModel");
 const SensorData = require("../models/sensorDataModel");
-const {firestore} = require("../config/firebaseConfig"); // Firebase config file
+const { firestore } = require("../config/firebaseConfig"); // Firebase config file
 
 // Controller function to sync sensor data
 const syncSensorData = async (req, res) => {
   try {
     // Fetch sensor data from Firebase
-    const sensorsSnapshot = await firestore.collection("sensors").get();
-    
-    if (sensorsSnapshot.empty) {
-      return res.status(404).send("No sensors found in Firestore.");
+    const sensorsSnapshot = await firestore.ref("sensorData").once("value");
+
+    if (!sensorsSnapshot.exists()) {
+      return res.status(404).send("No sensor data found in Firebase.");
     }
 
-    // Loop through each sensor document in Firestore
-    for (const sensorDoc of sensorsSnapshot.docs) {
-      const sensorData = sensorDoc.data();
+    const sensorDataMap = sensorsSnapshot.val();
 
-      console.log(`Processing sensor: ${sensorData.location}`); // Log sensor being processed
+    // Loop through each sensorTag in Firebase data
+    for (const sensorTag in sensorDataMap) {
+      console.log(`Processing sensor with sensorTag: ${sensorTag}`);
 
-      // Check if the sensor already exists in MongoDB
-      let sensor = await Sensor.findOne({ location: sensorData.location });
+      // Check if the sensor exists in MongoDB using sensorTag
+      const sensor = await Sensor.findOne({ sensorTag });
 
       if (!sensor) {
-        // If sensor does not exist, create a new sensor
-        sensor = new Sensor({
-          location: sensorData.location,
-          streetAddress: sensorData.streetAddress,
-          city: sensorData.city,
-        });
-        await sensor.save();
+        console.error(`Sensor with sensorTag ${sensorTag} does not exist in the database.`);
+        continue; // Skip to the next sensorTag if the sensor doesn't exist
       }
 
-      // Check if the sensorData array exists and has IDs
-      if (!sensorData.sensorData || sensorData.sensorData.length === 0) {
-        console.log(`No sensor data IDs found for sensor ${sensorData.location}`);
-        continue; // Skip to the next sensor if no sensor data IDs are found
-      }
-
-      // Log the sensorData array of IDs
-      console.log(`Found sensor data IDs for sensor ${sensorData.location}: ${sensorData.sensorData}`);
-
-      // Fetch related sensor data documents based on the array of IDs in sensorData
-      for (const sensorDataId of sensorData.sensorData) {
-        const sensorDataDoc = await firestore.collection("sensorData").doc(sensorDataId).get();
-
-        if (!sensorDataDoc.exists) {
-          console.log(`No sensor data found for ID ${sensorDataId} for sensor ${sensorData.location}`);
-          continue; // Skip if no sensor data found for the given ID
-        }
-
-        const data = sensorDataDoc.data();
-        console.log(`Processing sensor data: ${JSON.stringify(data)}`); // Log the sensor data being processed
+      // Loop through sensorData entries for this sensorTag
+      const sensorDataEntries = sensorDataMap[sensorTag];
+      for (const dataId in sensorDataEntries) {
+        const data = sensorDataEntries[dataId];
 
         // Check if the sensorData already exists in MongoDB to avoid duplication
         const existingData = await SensorData.findOne({
-          sensorId: sensor._id,
-          createdAt: data.createdAt || sensorDataDoc.createTime.toDate(), // Ensure unique data based on timestamp
+          sensorTag,
+          createdAt: new Date(data.createdAt), // Ensure unique data based on timestamp
         });
 
         if (!existingData) {
@@ -63,23 +42,26 @@ const syncSensorData = async (req, res) => {
           const newSensorData = new SensorData({
             temperature: data.temperature,
             humidity: data.humidity,
-            spi: data.spi,
             pm25: data.pm25,
-            sensorId: sensor._id, // Link sensor data to sensor in MongoDB
-            createdAt: data.createdAt || sensorDataDoc.createTime.toDate(), // Use createdAt if available or Firestore's createTime
+            latitude: data.latitude,
+            longitude: data.longitude,
+            createdAt: new Date(data.createdAt),
+            sensorTag, // Link sensor data to sensor using sensorTag
           });
 
           await newSensorData.save();
+          console.log(`New sensor data created for sensorTag: ${sensorTag}`);
 
           // Push the new sensorData reference to the sensor document
           sensor.sensorData.push(newSensorData._id);
         } else {
-          console.log(`Sensor data already exists for sensor ${sensorData.location}`);
+          console.log(`Sensor data already exists for sensorTag: ${sensorTag}`);
         }
       }
 
       // Save the updated sensor with linked sensorData
       await sensor.save();
+      console.log(`Sensor ${sensorTag} updated successfully.`);
     }
 
     res.status(200).send("Data synced successfully.");

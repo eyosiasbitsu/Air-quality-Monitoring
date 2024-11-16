@@ -7,7 +7,14 @@
 
 const express = require('express');
 const router = express.Router();
-const { getAllSensors, getSensorById, createSensor, updateSensor, deleteSensor } = require('../controllers/sensorController');
+const { 
+    getAllSensors, 
+    getSensorById, 
+    getSensorByTag, 
+    createSensor, 
+    updateSensor, 
+    deleteSensor 
+} = require('../controllers/sensorController');
 
 /**
  * @swagger
@@ -42,14 +49,20 @@ const { getAllSensors, getSensorById, createSensor, updateSensor, deleteSensor }
  *                     type: string
  *                     description: Address of the sensor location
  *                     example: "123 Main St"
- *                   sensorId:
+ *                   sensorTag:
  *                     type: string
- *                     description: Sensor identifier
+ *                     description: Sensor unique identifier
  *                     example: "SN-001"
  *                   city:
  *                     type: string
  *                     description: City where the sensor is located
  *                     example: "Addis Ababa"
+ *                   sensorData:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                       description: List of associated sensorData IDs
+ *                       example: ["638fcfdbc56f1a2789e1f24e", "638fcfdbc56f1a2789e1f25e"]
  */
 router.get('/', getAllSensors);
 
@@ -59,14 +72,14 @@ router.get('/', getAllSensors);
  *   get:
  *     summary: Get a sensor by ID
  *     tags: [Sensor]
- *     description: Retrieves a sensor based on its unique ID
+ *     description: Retrieves a sensor based on its unique MongoDB ID
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: Unique identifier for the sensor.
+ *         description: Unique MongoDB ID for the sensor.
  *         example: "638fcfdbc56f1a2789e1f23e"
  *     responses:
  *       200:
@@ -92,16 +105,78 @@ router.get('/', getAllSensors);
  *                   type: string
  *                   description: Address of the sensor location
  *                   example: "123 Main St"
- *                 sensorId:
+ *                 sensorTag:
  *                   type: string
- *                   description: Sensor identifier
+ *                   description: Sensor unique identifier
  *                   example: "SN-001"
  *                 city:
  *                   type: string
  *                   description: City where the sensor is located
  *                   example: "Addis Ababa"
+ *                 sensorData:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     description: List of associated sensorData IDs
+ *                     example: ["638fcfdbc56f1a2789e1f24e", "638fcfdbc56f1a2789e1f25e"]
  */
 router.get('/:id', getSensorById);
+
+/**
+ * @swagger
+ * /sensors/tag/{sensorTag}:
+ *   get:
+ *     summary: Get a sensor by sensorTag
+ *     tags: [Sensor]
+ *     description: Retrieves a sensor based on its unique sensorTag
+ *     parameters:
+ *       - in: path
+ *         name: sensorTag
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Unique sensorTag for the sensor.
+ *         example: "SN-001"
+ *     responses:
+ *       200:
+ *         description: Sensor details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   description: Sensor ID
+ *                   example: "638fcfdbc56f1a2789e1f23e"
+ *                 lat:
+ *                   type: string
+ *                   description: Latitude of the sensor location
+ *                   example: "9.03"
+ *                 lng:
+ *                   type: string
+ *                   description: Longitude of the sensor location
+ *                   example: "38.74"
+ *                 streetAddress:
+ *                   type: string
+ *                   description: Address of the sensor location
+ *                   example: "123 Main St"
+ *                 sensorTag:
+ *                   type: string
+ *                   description: Sensor unique identifier
+ *                   example: "SN-001"
+ *                 city:
+ *                   type: string
+ *                   description: City where the sensor is located
+ *                   example: "Addis Ababa"
+ *                 sensorData:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     description: List of associated sensorData IDs
+ *                     example: ["638fcfdbc56f1a2789e1f24e", "638fcfdbc56f1a2789e1f25e"]
+ */
+router.get('/tag/:sensorTag', getSensorByTag);
 
 /**
  * @swagger
@@ -129,9 +204,9 @@ router.get('/:id', getSensorById);
  *                 type: string
  *                 description: Address of the sensor location
  *                 example: "123 Main St"
- *               sensorId:
+ *               sensorTag:
  *                 type: string
- *                 description: Sensor identifier
+ *                 description: Unique sensorTag
  *                 example: "SN-001"
  *               city:
  *                 type: string
@@ -161,9 +236,9 @@ router.get('/:id', getSensorById);
  *                   type: string
  *                   description: Address of the sensor location
  *                   example: "123 Main St"
- *                 sensorId:
+ *                 sensorTag:
  *                   type: string
- *                   description: Sensor identifier
+ *                   description: Unique sensorTag
  *                   example: "SN-001"
  *                 city:
  *                   type: string
@@ -178,14 +253,14 @@ router.post('/', createSensor);
  *   put:
  *     summary: Update a sensor by ID
  *     tags: [Sensor]
- *     description: Updates sensor details based on its ID
+ *     description: Updates sensor details based on its MongoDB ID
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: Unique identifier for the sensor.
+ *         description: Unique MongoDB ID for the sensor.
  *         example: "638fcfdbc56f1a2789e1f23e"
  *     requestBody:
  *       required: true
@@ -206,9 +281,9 @@ router.post('/', createSensor);
  *                 type: string
  *                 description: Updated address of the sensor location
  *                 example: "456 Elm St"
- *               sensorId:
+ *               sensorTag:
  *                 type: string
- *                 description: Updated sensor identifier
+ *                 description: Updated unique sensorTag
  *                 example: "SN-002"
  *               city:
  *                 type: string
@@ -238,9 +313,9 @@ router.post('/', createSensor);
  *                   type: string
  *                   description: Updated address of the sensor location
  *                   example: "456 Elm St"
- *                 sensorId:
+ *                 sensorTag:
  *                   type: string
- *                   description: Updated sensor identifier
+ *                   description: Updated unique sensorTag
  *                   example: "SN-002"
  *                 city:
  *                   type: string
@@ -255,14 +330,14 @@ router.put('/:id', updateSensor);
  *   delete:
  *     summary: Delete a sensor by ID
  *     tags: [Sensor]
- *     description: Removes a sensor based on its ID
+ *     description: Removes a sensor based on its MongoDB ID
  *     parameters:
  *       - in: path
  *         name: id
  *         schema:
  *           type: string
  *         required: true
- *         description: Unique identifier for the sensor.
+ *         description: Unique MongoDB ID for the sensor.
  *         example: "638fcfdbc56f1a2789e1f23e"
  *     responses:
  *       204:

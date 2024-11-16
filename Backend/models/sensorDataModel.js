@@ -4,25 +4,33 @@ const mongoose = require("mongoose");
 const sensorDataSchema = new mongoose.Schema({
   temperature: {
     type: String,
+    required: true,
   },
   humidity: {
     type: String,
-  },
-  spi: {
-    type: String,
+    required: true,
   },
   pm25: {
     type: String,
+    required: true,
   },
-  date:{
-    type:Date,
-    default:Date.now
+  latitude: {
+    type: String,
+    required: true,
+  },
+  longitude: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    required: true,
   },
   sensorId: {
-    type: ObjectId,
-    ref: "Sensor",
-  }}
-);
+    type: String,
+    required: true,
+  },
+});
 
 const SensorData = mongoose.model("SensorData", sensorDataSchema);
 
