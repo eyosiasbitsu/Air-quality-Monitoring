@@ -42,14 +42,17 @@ const {
  *                     example: "23.5"
  *                   humidity:
  *                     type: string
- *                     example: "60"
- *                   spi:
+ *                     example: "60.0"
+ *                   latitude:
  *                     type: string
- *                     example: "1.2"
+ *                     example: "38.74"
+ *                   longitude:
+ *                     type: string
+ *                     example: "9.03"
  *                   pm25:
  *                     type: string
- *                     example: "15"
- *                   date:
+ *                     example: "15.0"
+ *                   createdAt:
  *                     type: string
  *                     format: date-time
  *                     example: "2024-11-13T08:30:00.000Z"
@@ -70,15 +73,15 @@ router.get('/', getAllSensorData);
  *       - in: query
  *         name: lat
  *         schema:
- *           type: number
+ *           type: string
  *         required: true
- *         example: 9.03
+ *         example: "9.03"
  *       - in: query
  *         name: lng
  *         schema:
- *           type: number
+ *           type: string
  *         required: true
- *         example: 38.74
+ *         example: "38.74"
  *     responses:
  *       200:
  *         description: Sensor data for the specified location
@@ -97,14 +100,17 @@ router.get('/', getAllSensorData);
  *                     example: "23.5"
  *                   humidity:
  *                     type: string
- *                     example: "60"
- *                   spi:
+ *                     example: "60.0"
+ *                   latitude:
  *                     type: string
- *                     example: "1.2"
+ *                     example: "38.74"
+ *                   longitude:
+ *                     type: string
+ *                     example: "9.03"
  *                   pm25:
  *                     type: string
- *                     example: "15"
- *                   date:
+ *                     example: "15.0"
+ *                   createdAt:
  *                     type: string
  *                     format: date-time
  *                     example: "2024-11-13T08:30:00.000Z"
@@ -125,15 +131,15 @@ router.get('/locate', getSensorDataByLocation);
  *       - in: query
  *         name: lat
  *         schema:
- *           type: number
+ *           type: string
  *         required: true
- *         example: 9.03
+ *         example: "9.03"
  *       - in: query
  *         name: lng
  *         schema:
- *           type: number
+ *           type: string
  *         required: true
- *         example: 38.74
+ *         example: "38.74"
  *       - in: query
  *         name: timeFrame
  *         schema:
@@ -159,14 +165,17 @@ router.get('/locate', getSensorDataByLocation);
  *                     example: "23.5"
  *                   humidity:
  *                     type: string
- *                     example: "60"
- *                   spi:
+ *                     example: "60.0"
+ *                   latitude:
  *                     type: string
- *                     example: "1.2"
+ *                     example: "38.74"
+ *                   longitude:
+ *                     type: string
+ *                     example: "9.03"
  *                   pm25:
  *                     type: string
- *                     example: "15"
- *                   date:
+ *                     example: "15.0"
+ *                   createdAt:
  *                     type: string
  *                     format: date-time
  *                     example: "2024-11-13T08:30:00.000Z"
@@ -206,14 +215,17 @@ router.get('/search', getSensorDataByTimeFrame);
  *                   example: "23.5"
  *                 humidity:
  *                   type: string
- *                   example: "60"
- *                 spi:
+ *                   example: "60.0"
+ *                 latitude:
  *                   type: string
- *                   example: "1.2"
+ *                   example: "38.74"
+ *                 longitude:
+ *                   type: string
+ *                   example: "9.03"
  *                 pm25:
  *                   type: string
- *                   example: "15"
- *                 date:
+ *                   example: "15.0"
+ *                 createdAt:
  *                   type: string
  *                   format: date-time
  *                   example: "2024-11-13T08:30:00.000Z"
@@ -242,46 +254,22 @@ router.get('/:id', getSensorDataById);
  *                 example: "23.5"
  *               humidity:
  *                 type: string
- *                 example: "60"
- *               spi:
+ *                 example: "60.0"
+ *               latitude:
  *                 type: string
- *                 example: "1.2"
+ *                 example: "38.74"
+ *               longitude:
+ *                 type: string
+ *                 example: "9.03"
  *               pm25:
  *                 type: string
- *                 example: "15"
+ *                 example: "15.0"
  *               sensorId:
  *                 type: string
  *                 example: "638fcfdbc56f1a2789e1f23e"
  *     responses:
  *       201:
  *         description: Sensor data created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                   example: "6390c0bfbcf86cd799439011"
- *                 temperature:
- *                   type: string
- *                   example: "23.5"
- *                 humidity:
- *                   type: string
- *                   example: "60"
- *                 spi:
- *                   type: string
- *                   example: "1.2"
- *                 pm25:
- *                   type: string
- *                   example: "15"
- *                 date:
- *                   type: string
- *                   format: date-time
- *                   example: "2024-11-13T08:30:00.000Z"
- *                 sensorId:
- *                   type: string
- *                   example: "638fcfdbc56f1a2789e1f23e"
  */
 router.post('/', createSensorData);
 
@@ -311,43 +299,19 @@ router.post('/', createSensorData);
  *                 example: "25.0"
  *               humidity:
  *                 type: string
- *                 example: "55"
- *               spi:
+ *                 example: "55.0"
+ *               latitude:
  *                 type: string
- *                 example: "1.0"
+ *                 example: "38.74"
+ *               longitude:
+ *                 type: string
+ *                 example: "9.03"
  *               pm25:
  *                 type: string
- *                 example: "12"
+ *                 example: "12.0"
  *     responses:
  *       200:
  *         description: Sensor data updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                   example: "6390c0bfbcf86cd799439011"
- *                 temperature:
- *                   type: string
- *                   example: "25.0"
- *                 humidity:
- *                   type: string
- *                   example: "55"
- *                 spi:
- *                   type: string
- *                   example: "1.0"
- *                 pm25:
- *                   type: string
- *                   example: "12"
- *                 date:
- *                   type: string
- *                   format: date-time
- *                   example: "2024-11-13T08:30:00.000Z"
- *                 sensorId:
- *                   type: string
- *                   example: "638fcfdbc56f1a2789e1f23e"
  */
 router.put('/:id', updateSensorData);
 

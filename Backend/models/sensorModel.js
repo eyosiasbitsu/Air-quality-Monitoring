@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const SensorData = require("./sensorDataModel");
 
 const sensorSchema = new mongoose.Schema({
   lat: {
@@ -14,25 +13,22 @@ const sensorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  sensorId: {
+  sensorTag: {
     type: String,
     required: true,
+    unique: true, // Ensures each sensorId is unique
   },
   city: {
     type: String,
     required: true,
-  }
-},
-{
-  toJSON:{virtuals:true},
-  toObject:{virtuals:true}
+  },
+  sensorData: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SensorData", // References the SensorData collection
+    },
+  ],
 });
-
-sensorSchema.virtual("sensorData",{
-  ref: "SensorData",
-  foreignField: "sensorId",
-  localField: "_id"
-})
 
 const Sensor = mongoose.model("Sensor", sensorSchema);
 
