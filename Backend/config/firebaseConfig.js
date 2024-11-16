@@ -1,14 +1,11 @@
+const fs = require("fs");
 const admin = require("firebase-admin");
 
 try {
-  // Check if the FIREBASE_CONFIG environment variable exists
-  if (!process.env.FIREBASE_CONFIG) {
-    throw new Error("FIREBASE_CONFIG environment variable is not defined.");
-  }
+  // Load the `cleanair.json` content from the Render secret file
+  const serviceAccount = JSON.parse(fs.readFileSync("/etc/secrets/FIREBASE_CONFIG", "utf8"));
 
-  // Parse the JSON string into an object
-  const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
-
+  // Initialize Firebase Admin SDK
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://cleanair-a01ff-default-rtdb.firebaseio.com",
@@ -20,6 +17,7 @@ try {
   process.exit(1); // Exit the process with failure
 }
 
+// Export the Firebase Realtime Database reference
 const db = admin.database();
 
 module.exports = {
