@@ -1,71 +1,61 @@
+const { realtimeDb } = require("../config/firebaseConfig"); // Import the initialized Realtime Database
 const Sensor = require("../models/sensorModel");
 const SensorData = require("../models/sensorDataModel");
-const { firestore } = require("../config/firebaseConfig"); // Firebase config file
 
-// Controller function to sync sensor data
 const syncSensorData = async (req, res) => {
   try {
-    // Fetch sensor data from Firebase
-    const sensorsSnapshot = await firestore.ref("sensorData").once("value");
+    console.log("Fetching sensor data from Firebase Realtime Database...");
 
-    if (!sensorsSnapshot.exists()) {
-      return res.status(404).send("No sensor data found in Firebase.");
+    const sensorDataRef = realtimeDb.ref("sensorData"); // Reference to the 'sensorData' node
+    const snapshot = await sensorDataRef.once("value");
+
+    if (!snapshot.exists()) {
+      console.log("No sensor data found in Realtime Database.");
+      return res.status(404).send("No sensor data found in Realtime Database.");
     }
 
-    const sensorDataMap = sensorsSnapshot.val();
+    const sensorData = snapshot.val();
+    console.log("Retrieved sensorData:", sensorData);
 
-    // Loop through each sensorTag in Firebase data
-    for (const sensorTag in sensorDataMap) {
-      console.log(`Processing sensor with sensorTag: ${sensorTag}`);
+    for (const [sensorTag, nestedData] of Object.entries(sensorData)) {
+      console.log(`Processing sensorTag: ${sensorTag}`);
 
-      // Check if the sensor exists in MongoDB using sensorTag
-      const sensor = await Sensor.findOne({ sensorTag });
-
+      let sensor = await Sensor.findOne({ sensorTag });
       if (!sensor) {
-        console.error(`Sensor with sensorTag ${sensorTag} does not exist in the database.`);
-        continue; // Skip to the next sensorTag if the sensor doesn't exist
+        console.log(`Sensor with sensorTag ${sensorTag} does not exist.`);
+        continue;
       }
 
-      // Loop through sensorData entries for this sensorTag
-      const sensorDataEntries = sensorDataMap[sensorTag];
-      for (const dataId in sensorDataEntries) {
-        const data = sensorDataEntries[dataId];
+      for (const [key, data] of Object.entries(nestedData)) {
+        if (!data || typeof data !== "object") continue;
 
-        // Check if the sensorData already exists in MongoDB to avoid duplication
-        const existingData = await SensorData.findOne({
-          sensorTag
+        // Save data to MongoDB
+        const newSensorData = new SensorData({
+          temperature: data.temperature,
+          humidity: data.humidity,
+          pm25: data.pm25,
+          latitude: data.latitude,
+          longitude: data.longitude,
+          createdAt: new Date(data.createdAt),
+          sensorTag,
         });
 
-        if (!existingData) {
-          // If it doesn't exist, create new sensor data
-          const newSensorData = new SensorData({
-            temperature: data.temperature,
-            humidity: data.humidity,
-            pm25: data.pm25,
-            latitude: data.latitude,
-            longitude: data.longitude,
-            createdAt: new Date(data.createdAt),
-            sensorTag, // Link sensor data to sensor using sensorTag
-          });
+        await newSensorData.save();
+        sensor.sensorData.push(newSensorData._id);
+        await sensor.save();
 
-          await newSensorData.save();
-          console.log(`New sensor data created for sensorTag: ${sensorTag}`);
+        console.log(`Stored new data for sensorTag: ${sensorTag}`);
 
-          // Push the new sensorData reference to the sensor document
-          sensor.sensorData.push(newSensorData._id);
-        } else {
-          console.log(`Sensor data already exists for sensorTag: ${sensorTag}`);
-        }
+        // Remove the data from Firebase
+        const dataRef = realtimeDb.ref(`sensorData/${sensorTag}/${key}`);
+        await dataRef.remove();
+        console.log(`Removed data for key ${key} under sensorTag: ${sensorTag} from Realtime Database.`);
       }
-
-      // Save the updated sensor with linked sensorData
-      await sensor.save();
-      console.log(`Sensor ${sensorTag} updated successfully.`);
     }
 
-    res.status(200).send("Data synced successfully.");
+    res.status(200).send("Data synced and removed successfully.");
   } catch (error) {
-    console.log("Error syncing data:", error.message);
+    console.error("Error syncing data:", error.message);
     res.status(500).send("Error syncing data.");
   }
 };
