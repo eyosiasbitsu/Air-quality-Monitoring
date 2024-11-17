@@ -188,37 +188,36 @@ router.get('/:id', getSensorDataById);
  *                   type: string
  *                   example: "No nearby sensors found"
  */
+
 router.get('/locate', getSensorDataByLocation);
 
 /**
  * @swagger
  * /sensorData/search:
- *   get:
+ *   post:
  *     summary: Retrieve sensor data by location and time frame
  *     tags: [SensorData]
- *     parameters:
- *       - in: query
- *         name: lat
- *         schema:
- *           type: string
- *         required: true
- *         description: Latitude for the location
- *         example: "38.74"
- *       - in: query
- *         name: lng
- *         schema:
- *           type: string
- *         required: true
- *         description: Longitude for the location
- *         example: "9.03"
- *       - in: query
- *         name: timeFrame
- *         schema:
- *           type: string
- *           enum: [daily, weekly, monthly]
- *         required: true
- *         description: Time frame for filtering sensor data
- *         example: "weekly"
+ *     description: Retrieve sensor data for the nearest sensor based on the provided latitude, longitude, and time frame from the request body.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               lat:
+ *                 type: string
+ *                 description: Latitude for the location
+ *                 example: "38.74"
+ *               lng:
+ *                 type: string
+ *                 description: Longitude for the location
+ *                 example: "9.03"
+ *               timeFrame:
+ *                 type: string
+ *                 description: Time frame for filtering sensor data
+ *                 enum: [daily, weekly, monthly]
+ *                 example: "weekly"
  *     responses:
  *       200:
  *         description: Sensor data within the time frame for the location
@@ -255,7 +254,7 @@ router.get('/locate', getSensorDataByLocation);
  *                     type: string
  *                     example: "sensor-001"
  *       400:
- *         description: Invalid parameters
+ *         description: Invalid parameters or missing required fields
  *         content:
  *           application/json:
  *             schema:
@@ -263,11 +262,30 @@ router.get('/locate', getSensorDataByLocation);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: "Invalid timeFrame. Use 'daily', 'weekly', or 'monthly'"
+ *                   example: "Please provide latitude, longitude, and timeFrame"
  *       404:
- *         description: No sensor data found
+ *         description: No nearby sensors or sensor data found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "No nearby sensors found"
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
  */
-router.get('/search', getSensorDataByTimeFrame);
+
+router.post('/search', getSensorDataByTimeFrame);
 
 /**
  * @swagger
@@ -308,6 +326,7 @@ router.get('/search', getSensorDataByTimeFrame);
  *       201:
  *         description: Sensor data created successfully
  */
+
 router.post('/', createSensorData);
 
 module.exports = router;
