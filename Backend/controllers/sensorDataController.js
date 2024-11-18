@@ -159,8 +159,9 @@ const getSensorDataByTimeFrame = async (req, res) => {
 
         // Retrieve sensor data for the specified time frame
         const sensorData = await SensorData.find({
-            sensorTag: nearestSensor.sensorTag
-        }).sort({ createdAt: 1 });
+            sensorTag: nearestSensor.sensorTag,
+            createdAt: { $gte: startDate, $lte: now } 
+        }).sort({ createdAt: -1 });
 
         res.status(200).json({
             sensorDetail: {
