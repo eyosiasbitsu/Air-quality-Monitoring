@@ -2,12 +2,9 @@ import React, { useState } from "react";
 import TablePage from "../components/TablePage";
 import { IoMdAdd } from "react-icons/io";
 import { useNavigate } from "react-router";
+import SensorPage from "../components/SensorPage";
 
 const DashboardLayout = () => {
-  const [searchText, setSearchText] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState("");
-  const [selectedCity, setSelectedCity] = useState("");
-
   const navigate = useNavigate();
   const handleRegistor = () => {
     navigate("/register");
@@ -24,7 +21,7 @@ const DashboardLayout = () => {
           <IoMdAdd color="black" size="1.5rem" />
         </div>
       </button>
-      <TablePage />
+      <SensorPage />
     </div>
   );
 };

@@ -2,8 +2,40 @@ import React from "react";
 
 export default function Footer() {
   return (
-    <div className="mt-10 bg-gray-100 flex justify-center py-10 rounded-2xl">
-      Footer
-    </div>
+    <footer className="bg-gray-100 border-t border-gray-300 py-4 text-sm">
+      <div className="container mx-auto flex justify-between items-center px-4">
+        {/* Left Side */}
+        <div className="text-gray-600">&copy; 2024 Clean Air</div>
+
+        {/* Center Links */}
+        <div className="flex space-x-4">
+          <a href="#" className="text-gray-600 hover:underline">
+            Help
+          </a>
+          <a href="#" className="text-gray-600 hover:underline">
+            Privacy
+          </a>
+          <a href="#" className="text-gray-600 hover:underline">
+            Terms
+          </a>
+        </div>
+
+        {/* Right Side */}
+        <div className="flex space-x-4 items-center">
+          {/* Social Icons */}
+          <a href="#" className="text-gray-600">
+            <i className="fab fa-facebook"></i>
+          </a>
+          <a href="#" className="text-gray-600">
+            <i className="fab fa-twitter"></i>
+          </a>
+          <a href="#" className="text-gray-600">
+            <i className="fab fa-instagram"></i>
+          </a>
+          {/* Language Dropdown */}
+          <div className="text-gray-600">English (United States)</div>
+        </div>
+      </div>
+    </footer>
   );
 }

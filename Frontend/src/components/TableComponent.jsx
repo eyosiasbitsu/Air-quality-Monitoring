@@ -1,12 +1,12 @@
 import React, { useState } from "react";
+import { format, parseISO } from "date-fns";
 import { FaStar } from "react-icons/fa";
 
 const TableComponent = ({ data }) => {
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(0);
-
   const startIdx = currentPage * itemsPerPage;
-  const paginatedData = data.slice(startIdx, startIdx + itemsPerPage);
+  const paginatedData = data?.slice(startIdx, startIdx + itemsPerPage);
 
   const handleNext = () => {
     if ((currentPage + 1) * itemsPerPage < data.length) {
@@ -24,14 +24,14 @@ const TableComponent = ({ data }) => {
     <div className="flex flex-col justify-center items-center w-full bg-inherit backdrop-blur-md shadow-2xl shadow-black rounded-3xl md:p-6">
       <div className="w-full overflow-x-auto">
         <table className="w-full rounded-2xl bg-inherit overflow-hidden text-gray-200 border-spacing-0">
-          <thead>
+          <thead className="rounded-3xl backdrop-brightness-50 p-1">
             <tr>
               <th className="py-1 px-2 md:px-6 text-left font-semibold w-1/3">
-                Sensors
+                Date Recorded
               </th>
-              <th className="py-1 px-2 md:px-6 text-left font-semibold w-1/6">
+              {/* <th className="py-1 px-2 md:px-6 text-left font-semibold w-1/6">
                 SPI
-              </th>
+              </th> */}
               <th className="py-1 px-2 md:px-6 text-left font-semibold w-1/6">
                 Temperature
               </th>
@@ -44,17 +44,19 @@ const TableComponent = ({ data }) => {
             </tr>
           </thead>
           <tbody>
-            {paginatedData.map((row, index) => (
+            {paginatedData?.map((row, index) => (
               <tr
                 key={index}
                 className="border-b border-gray-300 p-6 bg-inherit"
               >
-                <td className="py-2 md:py-4 px-4 text-sm">{row.sensors}</td>
-                <td className="py-2 md:py-4 px-4">
+                <td className="py-2 md:py-4 px-4 text-sm font-bold">
+                  {format(parseISO(row?.createdAt), "yyyy-MM-dd HH:mm")}
+                </td>
+                {/* <td className="py-2 md:py-4 px-4">
                   <div className="min-w-12 text-center bg-gray-200 text-gray-800 w-fit text-xs rounded-lg px-2 py-1">
                     {row.spi}
                   </div>
-                </td>
+                </td> */}
                 <td className="py-2 md:py-4 px-4">
                   <div className="min-w-12 text-center bg-gray-200 text-gray-800 w-fit text-xs rounded-lg px-2 py-1">
                     {row.temperature}
@@ -85,7 +87,7 @@ const TableComponent = ({ data }) => {
         </button>
         <button
           onClick={handleNext}
-          disabled={(currentPage + 1) * itemsPerPage >= data.length}
+          disabled={(currentPage + 1) * itemsPerPage >= data?.length}
           className="bg-gray-500 text-gray-200 px-4 py-2 rounded-lg disabled:opacity-50"
         >
           Next

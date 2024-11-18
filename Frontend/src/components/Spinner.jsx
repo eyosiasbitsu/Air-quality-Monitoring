@@ -3,14 +3,12 @@ import { Bars } from "react-loader-spinner";
 
 export default function Spinner() {
   return (
-    <div className="flex justify-center ">
+    <div className="fixed inset-0 bg-black bg-opacity-20 backdrop-blur-sm flex items-center justify-center z-50">
       <Bars
-        height="60"
-        width="60"
+        height="80"
+        width="80"
         color="#4fa94d"
         ariaLabel="bars-loading"
-        wrapperStyle={{}}
-        wrapperClass=""
         visible={true}
       />
     </div>

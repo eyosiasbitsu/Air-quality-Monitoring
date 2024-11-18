@@ -6,9 +6,17 @@ export const getSensors = async () => {
   return fetchedSensors.json();
 };
 
-export const getSensorData = async () => {
+export const getSensor = async () => {
   const fetchedSensors = await fetch(
-    `${import.meta.env.VITE_BACKEND_URL}/sensorData`,
+    `${import.meta.env.VITE_BACKEND_URL}/sensors`,
+  );
+
+  return fetchedSensors.json();
+};
+
+export const getSensorById = async (id) => {
+  const fetchedSensors = await fetch(
+    `${import.meta.env.VITE_BACKEND_URL}/sensors/${id}`,
   );
 
   return fetchedSensors.json();
@@ -62,7 +70,9 @@ export const signInUser = async (values) => {
   );
 
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    const errorData = await response.json(); // Ensure response is parsed as JSON
+    const errorMessage = errorData?.message || "An unknown error occurred";
+    throw new Error(errorMessage);
   }
   const result = await response.json();
 

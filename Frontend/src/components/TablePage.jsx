@@ -1,21 +1,12 @@
 import React from "react";
 import TableComponent from "./TableComponent";
-import { useOutletContext } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getSensorData, getSensors } from "../../services/sensorsApi";
+import { getSensor } from "../../services/sensorsApi";
 import Spinner from "./Spinner";
-import { toast } from "react-toastify";
+import showToast from "./Toast";
 
-const TablePage = () => {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["sensorData"],
-    queryFn: getSensorData,
-    onError: () => {
-      toast.info("dkjflasdjfkls");
-    },
-  });
-  if (isLoading) return <Spinner />;
-  return <TableComponent data={data} />;
+const TablePage = ({ data }) => {
+  return <TableComponent data={data?.sensorData} />;
 };
 
 export default TablePage;

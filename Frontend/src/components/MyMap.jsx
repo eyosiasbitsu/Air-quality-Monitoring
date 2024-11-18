@@ -28,12 +28,13 @@ function LocationMarker({ position, onMapClick }) {
   return position ? <Marker position={position} /> : null;
 }
 
-function MyMap2({ setLat, setLng }) {
+function MyMap2({ setLat, setLng, setShowMap }) {
   const [position, setPosition] = useState(null);
 
   const handleMapClick = (lat, lng) => {
     setLat(lat);
     setLng(lng);
+    setShowMap(false);
     setPosition({ lat, lng });
   };
 
