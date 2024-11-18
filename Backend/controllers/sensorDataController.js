@@ -122,7 +122,6 @@ const deleteSensorData = async (req, res) => {
 
 // Fetch sensor data by time frame
 const getSensorDataByTimeFrame = async (req, res) => {
-    // console.log("Was here");
     try {
         const { lat, lng, timeFrame } = req.body;
 
@@ -139,14 +138,12 @@ const getSensorDataByTimeFrame = async (req, res) => {
             lat: { $gte: (parseFloat(reqLatitude) - proximity).toString(), $lte: (parseFloat(reqLatitude) + proximity).toString() },
             lng: { $gte: (parseFloat(reqLongitude) - proximity).toString(), $lte: (parseFloat(reqLongitude) + proximity).toString() },
         });
-        console.log(sensors);
 
         if (!sensors.length) {
             return res.status(404).json({ message: "No nearby sensors found" });
         }
 
         const nearestSensor = sensors[0]; // Consider the first sensor as the closest
-        // console.log(`Nearest sensor: ${nearestSensor.sensorTag}`);
 
         let startDate;
         const now = new Date();
@@ -162,10 +159,22 @@ const getSensorDataByTimeFrame = async (req, res) => {
 
         // Retrieve sensor data for the specified time frame
         const sensorData = await SensorData.find({
-            sensorTag: nearestSensor.sensorTag,
+            sensorTag: nearestSensor.sensorTag
         }).sort({ createdAt: 1 });
 
-        res.status(200).json(sensorData);
+        res.status(200).json({
+            sensorDetail: {
+                id: nearestSensor._id,
+                tag: nearestSensor.sensorTag,
+                streetAddress: nearestSensor.streetAddress,
+                city: nearestSensor.city,
+                location: {
+                    latitude: nearestSensor.lat,
+                    longitude: nearestSensor.lng
+                }
+            },
+            sensorData
+        });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

@@ -220,39 +220,66 @@ router.get('/locate', getSensorDataByLocation);
  *                 example: "weekly"
  *     responses:
  *       200:
- *         description: Sensor data within the time frame for the location
+ *         description: Nearest sensor details and its data within the time frame
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                     example: "63f2c8f4e4b0f1c21d123abc"
- *                   temperature:
- *                     type: string
- *                     example: "25.3"
- *                   humidity:
- *                     type: string
- *                     example: "60.0"
- *                   latitude:
- *                     type: string
- *                     example: "38.74"
- *                   longitude:
- *                     type: string
- *                     example: "9.03"
- *                   pm25:
- *                     type: string
- *                     example: "15.5"
- *                   createdAt:
- *                     type: string
- *                     format: date-time
- *                     example: "2024-11-16T11:35:00Z"
- *                   sensorTag:
- *                     type: string
- *                     example: "sensor-001"
+ *               type: object
+ *               properties:
+ *                 sensorDetail:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: "63f2c8f4e4b0f1c21d123abc"
+ *                     tag:
+ *                       type: string
+ *                       example: "sensor-001"
+ *                     streetAddress:
+ *                       type: string
+ *                       example: "123 Main St"
+ *                     city:
+ *                       type: string
+ *                       example: "Addis Ababa"
+ *                     location:
+ *                       type: object
+ *                       properties:
+ *                         latitude:
+ *                           type: string
+ *                           example: "38.74"
+ *                         longitude:
+ *                           type: string
+ *                           example: "9.03"
+ *                 sensorData:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                         example: "63f2c8f4e4b0f1c21d123abc"
+ *                       temperature:
+ *                         type: string
+ *                         example: "25.3"
+ *                       humidity:
+ *                         type: string
+ *                         example: "60.0"
+ *                       latitude:
+ *                         type: string
+ *                         example: "38.74"
+ *                       longitude:
+ *                         type: string
+ *                         example: "9.03"
+ *                       pm25:
+ *                         type: string
+ *                         example: "15.5"
+ *                       createdAt:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2024-11-16T11:35:00Z"
+ *                       sensorTag:
+ *                         type: string
+ *                         example: "sensor-001"
  *       400:
  *         description: Invalid parameters or missing required fields
  *         content:
