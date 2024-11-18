@@ -5,7 +5,7 @@ import Footer from "./Footer";
 
 export default function BackGround() {
   return (
-    <div className="text-gray-600 mx-3 md:mx-[15%] flex-col justify-center">
+    <div className="text-gray-600 mx-3 md:mx-[15%] flex-col justify-center min-h-screen">
       <Header />
       <Outlet />
       <Footer />

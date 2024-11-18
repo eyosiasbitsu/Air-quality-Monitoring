@@ -8,28 +8,35 @@ import {
   Tooltip,
 } from "recharts";
 
-const data = [
-  { date: "2024-11-01", pm25: 35 },
-  { date: "2024-11-02", pm25: 42 },
-  { date: "2024-11-03", pm25: 30 },
-  { date: "2024-11-04", pm25: 28 },
-  { date: "2024-11-05", pm25: 40 },
-  { date: "2024-11-06", pm25: 45 },
-  { date: "2024-11-07", pm25: 50 },
-  { date: "2024-11-08", pm25: 48 },
-  { date: "2024-11-09", pm25: 60 },
-  { date: "2024-11-10", pm25: 55 },
-];
-
-export default function Graph() {
+export default function Graph({ data, color, independant, dependant, title }) {
   return (
-    <ResponsiveContainer width="100%" height="100%">
-      <AreaChart data={data}>
-        <XAxis dataKey="date" />
-        <YAxis />
-        <Area type="monotone" dataKey="pm25" stroke="#8884d8" fill="#8884d8" />
-        <Tooltip />
-      </AreaChart>
-    </ResponsiveContainer>
+    <div>
+      <h2 className="text-sm font-medium flex items-start text-center text-white mb-2 relative top-2 left-5">
+        {title}
+      </h2>
+      <ResponsiveContainer width={500} height={80}>
+        <AreaChart data={data}>
+          <XAxis
+            dataKey={independant}
+            tick={false} // Custom tick styles
+            // axisLine={{ stroke: "white" }} // Custom axis line color
+            // tickLine={{ stroke: "white" }} // Custom tick line color
+          />
+          {/* YAxis with custom tick color */}
+          <YAxis
+            tick={{ fill: "white", fontSize: 12 }} // Custom tick styles
+            // axisLine={{ stroke: "white" }} // Custom axis line color
+            // tickLine={{ stroke: "white" }} // Custom tick line color
+          />
+          <Area
+            type="monotone"
+            dataKey={dependant}
+            stroke={color}
+            fill={color}
+          />
+          <Tooltip />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
   );
 }

@@ -1,6 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  safelist: [
+    {
+      pattern: /toast-(success|error|info|warning)/, // Match your dynamic classes
+    },
+  ],
   theme: {
     extend: {
       colors: {

@@ -9,6 +9,7 @@ import SignIn from "./pages/SignIn";
 import RegisterSensor from "./pages/RegisterSensor";
 import BackGround from "./components/BackGround";
 import SensorData from "./pages/SensorData";
+import SensorDetail from "./pages/SensorDetail";
 
 const App = () => {
   const backgroundStyle = {
@@ -39,15 +40,26 @@ const App = () => {
               <Route index element={<SensorData />} />
               <Route path="/signin" element={<SignIn />} />
               <Route path="/register" element={<RegisterSensor />} />
-              <Route path="/sensordata" element={<DashboardLayout />} />
+              <Route path="/sensorpage" element={<DashboardLayout />} />
+              <Route path="/sensorpage/:id" element={<SensorDetail />} />
             </Route>
           </Routes>
         </Router>
         {/* Add ToastContainer for notifications */}
         <ToastContainer
+          toastStyle={{
+            width: "auto",
+            height: "auto",
+            fontSize: "15px",
+          }}
           position="top-center"
           autoClose={3000}
-          // hideProgressBar={false}
+          hideProgressBar
+          closeOnClick
+          pauseOnHover
+          draggable
+          theme="light"
+          transition:Bounce
         />
       </QueryClientProvider>
     </div>
