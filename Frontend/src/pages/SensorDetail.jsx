@@ -9,22 +9,18 @@ import TablePage from "../components/TablePage";
 export default function SensorDetail() {
   const { id } = useParams();
   const { isLoading, data } = useQuery({
-    queryKey: ["sensors"],
-    queryFn: () => getSensor,
+    queryKey: ["sensorDetail", id],
+    queryFn: () => getSensorById(id),
     onError: (error) => {
       showToast(error.message, "error");
     },
   });
-
-  const filteredSensor = Array.isArray(data)
-    ? data?.filter((sensor) => sensor._id == id)[0]
-    : "";
-  console.log(filteredSensor);
+  console.log(data);
 
   if (isLoading) return <Spinner />;
   return (
     <div className="min-h-screen">
-      <TablePage data={filteredSensor} />
+      <TablePage data={data} />
     </div>
   );
 }

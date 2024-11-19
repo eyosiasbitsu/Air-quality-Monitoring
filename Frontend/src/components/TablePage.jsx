@@ -6,7 +6,7 @@ import Spinner from "./Spinner";
 import showToast from "./Toast";
 
 const TablePage = ({ data }) => {
-  return <TableComponent data={data?.sensorData} />;
+  return <TableComponent data={data} />;
 };
 
 export default TablePage;

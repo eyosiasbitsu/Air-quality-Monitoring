@@ -15,7 +15,7 @@ const SignIn = () => {
     mutationFn: (obj) => signInUser(obj),
     onSuccess: async () => {
       showToast("success", "success");
-      navigate("/sensordata");
+      navigate("/sensorpage");
     },
     onError: async (error) => {
       showToast(error.message, "error");

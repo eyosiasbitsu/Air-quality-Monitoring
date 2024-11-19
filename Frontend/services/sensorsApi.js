@@ -23,14 +23,18 @@ export const getSensorById = async (id) => {
 };
 
 export const getSensorDataBYLocation = async (position) => {
-  const { lat, lng } = position;
+  const { lat, lng, timeFrame } = position;
   const fetchedSensors = await fetch(
-    `${import.meta.env.VITE_BACKEND_URL}/sensorData/locate?lng=${lng}&lat=${lat}`,
+    `${import.meta.env.VITE_BACKEND_URL}/sensorData/search?lng=${lng}&lat=${lat}&timeFrame=${timeFrame}`,
     {
       method: "GET",
     },
   );
-
+  if (!fetchedSensors.ok) {
+    const errorData = await fetchedSensors.json(); // Ensure response is parsed as JSON
+    const errorMessage = errorData?.message || "An unknown error occurred";
+    throw new Error(errorMessage);
+  }
   const response = await fetchedSensors.json();
   return response;
 };
@@ -50,8 +54,6 @@ export const newSensor = async (newSensor) => {
   if (!fetchedSensors.ok) {
     throw new Error("Failed to add user");
   }
-
-  console.log("dfjdslkf /n" + fetchedSensors);
 
   return fetchedSensors.json(); // or return response if no JSON response is needed
 };

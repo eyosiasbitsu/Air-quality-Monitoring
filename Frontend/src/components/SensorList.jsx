@@ -42,11 +42,14 @@ const SensorList = ({ data }) => {
                 key={index}
                 className="flex border-b border-gray-300 p-3 bg-inherit w-auto min-w-[28rem] gap-10 justify-between"
               >
-                <div className="py-2 md:py-2 px-4 text-sm font-semibold">
-                  <div className="w-auto">
-                    {row.streetAddress}, {row.city}
+                <div className="flex items-center">
+                  <FaStar size="1rem" color="gold" />
+                  <div className="py-2 md:py-2 px-4 text-sm font-semibold">
+                    <div className="w-auto">
+                      {row.streetAddress}, {row.city}
+                    </div>
+                    <div className="text-xs">{row.sensorTag}</div>
                   </div>
-                  <div className="text-xs">{row.sensorTag}</div>
                 </div>
                 <button
                   className="flex gap-5 items-center border px-4 rounded-2xl"
