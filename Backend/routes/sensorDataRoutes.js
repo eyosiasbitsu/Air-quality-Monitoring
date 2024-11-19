@@ -19,110 +19,6 @@ const {
 
 /**
  * @swagger
- * /sensorData:
- *   get:
- *     summary: Retrieve all sensor data
- *     tags: [SensorData]
- *     responses:
- *       200:
- *         description: List of all sensor data
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                     example: "63f2c8f4e4b0f1c21d123abc"
- *                   temperature:
- *                     type: string
- *                     example: "25.3"
- *                   humidity:
- *                     type: string
- *                     example: "60.0"
- *                   latitude:
- *                     type: string
- *                     example: "38.74"
- *                   longitude:
- *                     type: string
- *                     example: "9.03"
- *                   pm25:
- *                     type: string
- *                     example: "15.5"
- *                   createdAt:
- *                     type: string
- *                     format: date-time
- *                     example: "2024-11-16T11:35:00Z"
- *                   sensorTag:
- *                     type: string
- *                     example: "sensor-001"
- */
-router.get('/', getAllSensorData);
-
-/**
- * @swagger
- * /sensorData/{id}:
- *   get:
- *     summary: Retrieve sensor data by its ID
- *     tags: [SensorData]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: The ID of the sensor data
- *         example: "63f2c8f4e4b0f1c21d123abc"
- *     responses:
- *       200:
- *         description: Details of the sensor data
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                   example: "63f2c8f4e4b0f1c21d123abc"
- *                 temperature:
- *                   type: string
- *                   example: "25.3"
- *                 humidity:
- *                   type: string
- *                   example: "60.0"
- *                 latitude:
- *                   type: string
- *                   example: "38.74"
- *                 longitude:
- *                   type: string
- *                   example: "9.03"
- *                 pm25:
- *                   type: string
- *                   example: "15.5"
- *                 createdAt:
- *                   type: string
- *                   format: date-time
- *                   example: "2024-11-16T11:35:00Z"
- *                 sensorTag:
- *                   type: string
- *                   example: "sensor-001"
- *       404:
- *         description: Sensor data not found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Sensor data not found"
- */
-router.get('/:id', getSensorDataById);
-
-/**
- * @swagger
  * /sensorData/locate:
  *   get:
  *     summary: Retrieve sensor data by location
@@ -194,7 +90,7 @@ router.get('/locate', getSensorDataByLocation);
 /**
  * @swagger
  * /sensorData/search:
- *   post:
+ *   get:
  *     summary: Retrieve sensor data by location and time frame
  *     tags: [SensorData]
  *     description: Retrieve sensor data for the nearest sensor based on the provided latitude, longitude, and time frame from the request body.
@@ -312,7 +208,7 @@ router.get('/locate', getSensorDataByLocation);
  *                   example: "Internal server error"
  */
 
-router.post('/search', getSensorDataByTimeFrame);
+router.get('/search', getSensorDataByTimeFrame);
 
 /**
  * @swagger
@@ -355,5 +251,109 @@ router.post('/search', getSensorDataByTimeFrame);
  */
 
 router.post('/', createSensorData);
+
+/**
+ * @swagger
+ * /sensorData:
+ *   get:
+ *     summary: Retrieve all sensor data
+ *     tags: [SensorData]
+ *     responses:
+ *       200:
+ *         description: List of all sensor data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                     example: "63f2c8f4e4b0f1c21d123abc"
+ *                   temperature:
+ *                     type: string
+ *                     example: "25.3"
+ *                   humidity:
+ *                     type: string
+ *                     example: "60.0"
+ *                   latitude:
+ *                     type: string
+ *                     example: "38.74"
+ *                   longitude:
+ *                     type: string
+ *                     example: "9.03"
+ *                   pm25:
+ *                     type: string
+ *                     example: "15.5"
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2024-11-16T11:35:00Z"
+ *                   sensorTag:
+ *                     type: string
+ *                     example: "sensor-001"
+ */
+router.get('/', getAllSensorData);
+
+/**
+ * @swagger
+ * /sensorData/{id}:
+ *   get:
+ *     summary: Retrieve sensor data by its ID
+ *     tags: [SensorData]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the sensor data
+ *         example: "63f2c8f4e4b0f1c21d123abc"
+ *     responses:
+ *       200:
+ *         description: Details of the sensor data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   example: "63f2c8f4e4b0f1c21d123abc"
+ *                 temperature:
+ *                   type: string
+ *                   example: "25.3"
+ *                 humidity:
+ *                   type: string
+ *                   example: "60.0"
+ *                 latitude:
+ *                   type: string
+ *                   example: "38.74"
+ *                 longitude:
+ *                   type: string
+ *                   example: "9.03"
+ *                 pm25:
+ *                   type: string
+ *                   example: "15.5"
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                   example: "2024-11-16T11:35:00Z"
+ *                 sensorTag:
+ *                   type: string
+ *                   example: "sensor-001"
+ *       404:
+ *         description: Sensor data not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Sensor data not found"
+ */
+router.get('/:id', getSensorDataById);
 
 module.exports = router;
