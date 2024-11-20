@@ -15,9 +15,8 @@ function LocationSearch() {
   const [selectedPosition, setSelectedPosition] = useState(null);
   const [currentTime, setCurrentTime] = useState("");
   const [position, setPosition] = useState({});
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const mokeData = {
+  const [timeFrame, setTimeFrame] = useState("weekly");
+  const mockdata = {
     sensorDetail: {
       id: "67389693cb3dd321b837a6d6",
       tag: "0000001",
@@ -130,16 +129,24 @@ function LocationSearch() {
       },
     ],
   };
-  const queryClient = useQueryClient();
 
-  const [selectedOption, setSelectedOption] = useState(""); // State to handle selected value
+  // Mock function to send a request
+  const { isLoading, data, refetch, error } = useQuery({
+    queryKey: ["searchedSensor", timeFrame],
+    enabled: false,
+    queryFn: () => getSensorDataBYLocation({ ...position, timeFrame }),
+    throwOnError: (err) => {
+      showToast("No nearby sensors found", "info");
+    },
+  });
 
+  // console.error(...error);
   const handleChange = (event) => {
-    setSelectedOption(event.target.value); // Update state on selection
-    sendRequest(position, selectedOption);
+    setTimeFrame(event.target.value); // Update state on selection
+    refetch();
   };
 
-  const modifiedData = mokeData?.sensorData?.map((sensor) => {
+  const modifiedData = data?.sensorData?.map((sensor) => {
     return {
       temperature: parseFloat(sensor.temperature),
       humidity: parseFloat(sensor.humidity),
@@ -184,19 +191,7 @@ function LocationSearch() {
     setSuggestions([]); // Clear suggestions after selection
     setPosition({ lat: parseFloat(lat), lng: parseFloat(lon) });
 
-    // Send request with the selected position
-    sendRequest(position);
-  };
-
-  // Mock function to send a request
-  const sendRequest = (position, timeFrame = "daily") => {
-    const { isLoading, data } = useQuery({
-      queryKey: ["searchedSensor", timeFrame],
-      queryFn: getSensorDataBYLocation({ ...position, timeFrame }),
-      onError: (err) => showToast(err?.message, "error"),
-    });
-    setIsLoading(isLoading);
-    setData(data);
+    refetch();
   };
 
   // Update the current time every second
@@ -254,13 +249,13 @@ function LocationSearch() {
               <div className="flex items-center gap-2">
                 <LiaLocationArrowSolid size={30} />
                 <span className="text-lg font-medium">
-                  {mokeData?.sensorDetail?.streetAddress},{" "}
-                  {mokeData?.sensorDetail?.city}
+                  {data?.sensorDetail?.streetAddress},{" "}
+                  {data?.sensorDetail?.city}
                 </span>
               </div>
             </div>
             <div className="text-5xl font-bold">
-              {mokeData?.sensorData[0].temperature} °C
+              {data?.sensorData[0].temperature} °C
             </div>
             <div className="text-gray-300 text-lg">{currentTime}</div>
           </div>
@@ -268,7 +263,7 @@ function LocationSearch() {
           ""
         )}
         {selectedPosition ? (
-          <AirQualityGauge pm25={mokeData?.sensorData[0]?.pm25} />
+          <AirQualityGauge pm25={data?.sensorData[0]?.pm25} />
         ) : (
           ""
         )}
@@ -280,7 +275,7 @@ function LocationSearch() {
             <select
               id="dropdown"
               name="dropdown"
-              value={selectedOption}
+              value={timeFrame}
               onChange={handleChange}
               className="w-full bg-inherit border border-inherit text-gray-200 text-sm rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 block p-2.5  backdrop-brightness-50"
             >

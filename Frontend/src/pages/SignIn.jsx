@@ -68,13 +68,17 @@ const SignIn = () => {
           <button
             type="submit"
             disabled={isPending}
-            className="bg-gray-100 opacity-30 hover:bg-gray-300 text-gray-700 font-bold py-0 px-6 mt-3 mb-7 rounded-full h-9 w-32 md:h-[40px] md:w-[60%]" // Ensure button height is 44px
+            className={
+              password && email
+                ? "bg-white hover:bg-gray-300 text-gray-700 font-bold py-0 px-6 mt-3 mb-7 rounded-full h-9 w-32 md:h-[40px] md:w-[60%]"
+                : "bg-gray-100 opacity-30 hover:bg-gray-300 text-gray-700 font-bold py-0 px-6 mt-3 mb-7 rounded-full h-9 w-32 md:h-[40px] md:w-[60%]"
+            }
             onClick={(e) => {
               e.preventDefault();
               mutate({ email, password });
             }}
           >
-            Sign In
+            {isPending ? "Signing in..." : "Sign In"}
           </button>
         </form>
       </div>

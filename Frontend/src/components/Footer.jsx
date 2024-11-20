@@ -2,8 +2,8 @@ import React from "react";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-100 border-t border-gray-300 py-4 text-sm">
-      <div className="container mx-auto flex justify-between items-center px-4">
+    <footer className="bg-gray-100 border-t border-gray-300 py-4 text-sm min-h-20 flex items-center">
+      <div className="container flex justify-between items-center px-4 mx-[15%]">
         {/* Left Side */}
         <div className="text-gray-600">&copy; 2024 Clean Air</div>
 
