@@ -123,7 +123,7 @@ const deleteSensorData = async (req, res) => {
 // Fetch sensor data by time frame
 const getSensorDataByTimeFrame = async (req, res) => {
     try {
-        const { lat, lng, timeFrame } = req.body;
+        const { lat, lng, timeFrame } = req.query;
 
         if (!lat || !lng || !timeFrame) {
             return res.status(400).json({ message: "Please provide latitude, longitude, and timeFrame" });
