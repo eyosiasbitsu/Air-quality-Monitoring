@@ -14,6 +14,20 @@ export const getSensor = async () => {
   return fetchedSensors.json();
 };
 
+export const syncData = async () => {
+  const fetchedSensors = await fetch(
+    `${import.meta.env.VITE_BACKEND_URL}/sync`,
+  );
+  if (!fetchedSensors.ok) {
+    const errorData = await fetchedSensors.json();
+    const errorMessage = errorData?.message || "An unknown error occurred";
+    console.log(errorData);
+    throw new Error(errorData);
+  }
+
+  return "successfully synced";
+};
+
 export const getSensorById = async (id) => {
   const fetchedSensors = await fetch(
     `${import.meta.env.VITE_BACKEND_URL}/sensors/${id}`,
@@ -32,7 +46,7 @@ export const getSensorDataBYLocation = async (position) => {
   );
   if (!fetchedSensors.ok) {
     const errorData = await fetchedSensors.json(); // Ensure response is parsed as JSON
-    const errorMessage = errorData?.message || "An unknown error occurred";
+    const errorMessage = errorData || "An unknown error occurred";
     throw new Error(errorMessage);
   }
   const response = await fetchedSensors.json();

@@ -72,13 +72,17 @@ const RegisterSensor = () => {
           <button
             type="submit"
             disabled={isPending}
-            className="bg-gray-100 opacity-30 hover:bg-gray-300 text-gray-700 font-bold md:py-2 px-6 rounded-full h-[44px] w-[40%]"
+            className={
+              sensorTag && lat && lng && city && streetAddress
+                ? "bg-white  hover:bg-gray-300 text-gray-700 font-bold md:py-2 px-6 rounded-full h-[44px] w-[40%]"
+                : "bg-gray-100 opacity-30 hover:bg-gray-300 text-gray-700 font-bold md:py-2 px-6 rounded-full h-[44px] w-[40%]"
+            }
             onClick={(e) => {
               e.preventDefault();
               mutate({ sensorTag, city, lat, lng, streetAddress });
             }}
           >
-            Register
+            {isPending ? "Registering" : "Register"}
           </button>
         </form>
       </div>
