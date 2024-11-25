@@ -93,7 +93,7 @@ function LocationSearch() {
       <div
         className={
           data
-            ? "flex flex-col gap-6 border rounded-3xl backdrop-blur-md bg-white/10 h-fit p-6 w-full md:w-1/2"
+            ? "flex flex-col gap-6 border rounded-3xl backdrop-blur-md bg-white/10 h-fit p-6 w-full md:w-[28rem]"
             : "flex flex-col gap-6 border rounded-3xl backdrop-blur-md bg-white/10 h-fit p-6 w-full md:w-1/2 absolute left-80 top-32"
         }
       >
@@ -105,7 +105,11 @@ function LocationSearch() {
               type="text"
               value={searchText}
               onChange={handleInputChange}
-              placeholder="Search a location"
+              placeholder={
+                data
+                  ? "Search a location"
+                  : "Please search a location to Get Started"
+              }
               className="bg-transparent w-full text-sm placeholder-white text-white outline-none"
             />
           </div>

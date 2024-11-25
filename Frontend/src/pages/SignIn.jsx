@@ -37,7 +37,7 @@ const SignIn = () => {
 
   return (
     <div className="flex items-center justify-center mt-10 mb-36 px-0 bg-inherit py-8 md:p-8 text-gray-100">
-      <div className=" bg-inherit shadow-lg rounded-3xl py-8 md:px-32 backdrop-blur-2xl w-[100vw] md:w-[45vw] md:h-[60vh] px-4">
+      <div className=" bg-inherit shadow-lg rounded-3xl py-8 md:px-16 backdrop-blur-2xl w-[100vw] md:w-[30vw] md:h-[60vh] px-4">
         <h2 className="text-3xl font-bold mb-6 text-center">Sign In</h2>
         <form className="flex flex-col items-start">
           <div className=" space-y-7 w-full">
@@ -82,8 +82,8 @@ const SignIn = () => {
             disabled={isPending}
             className={
               password && email
-                ? "bg-white hover:bg-gray-300 text-gray-700 font-bold py-0 px-6 mt-3 mb-7 rounded-full h-9 w-32 md:h-[40px] md:w-[60%]"
-                : "bg-gray-100 opacity-30 hover:bg-gray-300 text-gray-700 font-bold py-0 px-6 mt-3 mb-7 rounded-full h-9 w-32 md:h-[40px] md:w-[60%]"
+                ? "bg-white hover:bg-gray-300 text-gray-700 font-bold py-0 px-6 mt-3 mb-7 rounded-full h-9 w-32 md:h-[40px] md:w-[50%]"
+                : "bg-gray-100 opacity-30 hover:bg-gray-300 text-gray-700 font-bold py-0 px-6 mt-3 mb-7 rounded-full h-9 w-32 md:h-[40px] md:w-[50%]"
             }
             onClick={(e) => {
               e.preventDefault();
