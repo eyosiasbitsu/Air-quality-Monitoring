@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline"; // Make sure to install @heroicons/react
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { signInUser } from "../../services/sensorsApi";
 import showToast from "../components/Toast";
 
@@ -10,22 +10,34 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
+  const queryClient = useQueryClient();
   const { isPending, mutate } = useMutation({
     mutationFn: (obj) => signInUser(obj),
-    onSuccess: async () => {
+    onSuccess: (data) => {
+      // Store token and user data in the query cache
+      queryClient.setQueryData(["token"], data.token);
+      queryClient.setQueryData(["user"], data.userDetail);
+
+      // Show success notification
       showToast("success", "success");
+
+      // Navigate to the desired page
       navigate("/sensorpage");
+
+      // Optionally, store the token in localStorage for persistence
+      // localStorage.setItem("token", data.token);
     },
-    onError: async (error) => {
-      showToast(error.message, "error");
+    onError: (error) => {
+      // Handle errors gracefully
+      const errorMessage =
+        error.response?.data?.message || error.message || "An error occurred";
+      showToast(errorMessage, "error");
     },
   });
 
-  const handleSubmit = (e) => {};
   return (
     <div className="flex items-center justify-center mt-10 mb-36 px-0 bg-inherit py-8 md:p-8 text-gray-100">
-      <div className=" bg-inherit shadow-lg rounded-3xl py-8 md:px-32 backdrop-blur-2xl w-[100vw] md:w-[45vw] md:h-[60vh] px-4">
+      <div className=" bg-inherit shadow-lg rounded-3xl py-8 md:px-16 backdrop-blur-2xl w-[100vw] md:w-[30vw] md:h-[60vh] px-4">
         <h2 className="text-3xl font-bold mb-6 text-center">Sign In</h2>
         <form className="flex flex-col items-start">
           <div className=" space-y-7 w-full">
@@ -70,8 +82,8 @@ const SignIn = () => {
             disabled={isPending}
             className={
               password && email
-                ? "bg-white hover:bg-gray-300 text-gray-700 font-bold py-0 px-6 mt-3 mb-7 rounded-full h-9 w-32 md:h-[40px] md:w-[60%]"
-                : "bg-gray-100 opacity-30 hover:bg-gray-300 text-gray-700 font-bold py-0 px-6 mt-3 mb-7 rounded-full h-9 w-32 md:h-[40px] md:w-[60%]"
+                ? "bg-white hover:bg-gray-300 text-gray-700 font-bold py-0 px-6 mt-3 mb-7 rounded-full h-9 w-32 md:h-[40px] md:w-[50%]"
+                : "bg-gray-100 opacity-30 hover:bg-gray-300 text-gray-700 font-bold py-0 px-6 mt-3 mb-7 rounded-full h-9 w-32 md:h-[40px] md:w-[50%]"
             }
             onClick={(e) => {
               e.preventDefault();

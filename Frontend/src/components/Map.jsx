@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Graph from "./Graph";
 import AirQualityGauge from "./AirQualityGauge";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getSensorDataBYLocation } from "../../services/sensorsApi";
 import { VscSearch } from "react-icons/vsc";
 import { LiaLocationArrowSolid } from "react-icons/lia";
@@ -12,148 +12,30 @@ import Spinner from "./Spinner";
 function LocationSearch() {
   const [searchText, setSearchText] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const [selectedPosition, setSelectedPosition] = useState(null);
-  const [currentTime, setCurrentTime] = useState("");
-  const [position, setPosition] = useState({});
+  const [position, setPosition] = useState({ lat: null, lng: null });
   const [timeFrame, setTimeFrame] = useState("weekly");
-  const mockdata = {
-    sensorDetail: {
-      id: "67389693cb3dd321b837a6d6",
-      tag: "0000001",
-      streetAddress: "Piassa Main Road",
-      city: "Addis Ababa",
-      location: {
-        latitude: "9.037",
-        longitude: "38.763",
-      },
-    },
-    sensorData: [
-      {
-        _id: "6739f101ce0d25622cf65396",
-        temperature: "28.78",
-        humidity: "60.44",
-        pm25: "86.34",
-        latitude: "-95.223456",
-        longitude: "47.223456",
-        createdAt: "2024-11-16T11:38:00.000Z",
-        sensorTag: "0000001",
-        __v: 0,
-      },
-      {
-        _id: "6739f101ce0d25622cf65399",
-        temperature: "28.78",
-        humidity: "60.44",
-        pm25: "86.34",
-        latitude: "-95.223456",
-        longitude: "47.223456",
-        createdAt: "2024-11-16T11:38:00.000Z",
-        sensorTag: "0000001",
-        __v: 0,
-      },
-      {
-        _id: "6739e6dd34c028f26d7b7d15",
-        temperature: "28.78",
-        humidity: "52.34",
-        pm25: "21.34",
-        latitude: "-95.223456",
-        longitude: "47.223456",
-        createdAt: "2024-11-16T11:35:00.000Z",
-        sensorTag: "0000001",
-        __v: 0,
-      },
-      {
-        _id: "6739e6dd34c028f26d7b7d18",
-        temperature: "28.78",
-        humidity: "52.34",
-        pm25: "21.34",
-        latitude: "-95.223456",
-        longitude: "47.223456",
-        createdAt: "2024-11-16T11:35:00.000Z",
-        sensorTag: "0000001",
-        __v: 0,
-      },
-      {
-        _id: "6739e6de34c028f26d7b7d1b",
-        temperature: "28.78",
-        humidity: "52.34",
-        pm25: "21.34",
-        latitude: "-95.223456",
-        longitude: "47.223456",
-        createdAt: "2024-11-16T11:35:00.000Z",
-        sensorTag: "0000001",
-        __v: 0,
-      },
-      {
-        _id: "6739f0ffce0d25622cf6538a",
-        temperature: "28.78",
-        humidity: "40.34",
-        pm25: "81.34",
-        latitude: "-95.223456",
-        longitude: "47.223456",
-        createdAt: "2024-11-16T11:35:00.000Z",
-        sensorTag: "0000001",
-        __v: 0,
-      },
-      {
-        _id: "6739f0ffce0d25622cf6538d",
-        temperature: "28.78",
-        humidity: "40.34",
-        pm25: "81.34",
-        latitude: "-95.223456",
-        longitude: "47.223456",
-        createdAt: "2024-11-16T11:35:00.000Z",
-        sensorTag: "0000001",
-        __v: 0,
-      },
-      {
-        _id: "6739f100ce0d25622cf65390",
-        temperature: "28.78",
-        humidity: "60.44",
-        pm25: "81.34",
-        latitude: "-95.223456",
-        longitude: "47.223456",
-        createdAt: "2024-11-16T11:35:00.000Z",
-        sensorTag: "0000001",
-        __v: 0,
-      },
-      {
-        _id: "6739f100ce0d25622cf65393",
-        temperature: "28.78",
-        humidity: "60.44",
-        pm25: "86.34",
-        latitude: "-95.223456",
-        longitude: "47.223456",
-        createdAt: "2024-11-16T11:35:00.000Z",
-        sensorTag: "0000001",
-        __v: 0,
-      },
-    ],
-  };
+  const [currentTime, setCurrentTime] = useState("");
 
-  // Mock function to send a request
-  const { isLoading, data, refetch, error } = useQuery({
-    queryKey: ["searchedSensor", timeFrame],
-    enabled: false,
+  const { lat, lng } = position;
+
+  // React Query to fetch sensor data based on position and timeFrame
+  const { isLoading, data, error, refetch, isError } = useQuery({
+    queryKey: ["searchedSensor", timeFrame, lat, lng],
     queryFn: () => getSensorDataBYLocation({ ...position, timeFrame }),
-    throwOnError: (err) => {
-      showToast("No nearby sensors found", "info");
-    },
+    enabled: !!lat && !!lng,
+    // throwOnError: true, // Propagates errors to be handled explicitly
   });
 
-  // console.error(...error);
-  const handleChange = (event) => {
-    setTimeFrame(event.target.value); // Update state on selection
-    refetch();
-  };
+  if (isError) {
+    showToast(error.message, "info");
+  }
 
-  const modifiedData = data?.sensorData?.map((sensor) => {
-    return {
-      temperature: parseFloat(sensor.temperature),
-      humidity: parseFloat(sensor.humidity),
-      pm25: parseFloat(sensor.pm25),
-      createdAt: format(parseISO(sensor?.createdAt), "yyyy-MM-dd HH:mm"),
-    };
-  });
+  const modifiedData = data?.sensorData?.map((sensor) => ({
+    temperature: parseFloat(sensor.temperature),
+    humidity: parseFloat(sensor.humidity),
+    pm25: parseFloat(sensor.pm25),
+    createdAt: format(parseISO(sensor?.createdAt), "yyyy-MM-dd HH:mm"),
+  }));
 
   // Fetch suggestions for the search input
   const fetchSuggestions = (query) => {
@@ -161,17 +43,10 @@ function LocationSearch() {
       `https://nominatim.openstreetmap.org/search?q=${query}&format=json&addressdetails=1&limit=8`,
     )
       .then((response) => response.json())
-      .then((data) => {
-        if (data.length > 0) {
-          setSuggestions(data); // Update suggestions list
-        } else {
-          setSuggestions([]);
-        }
-      })
+      .then((data) => setSuggestions(data.length > 0 ? data : []))
       .catch((error) => console.error("Error fetching suggestions:", error));
   };
 
-  // Handle input changes in the search bar
   const handleInputChange = (e) => {
     const value = e.target.value;
     setSearchText(value);
@@ -186,12 +61,14 @@ function LocationSearch() {
   // Handle selection of a suggestion
   const handleSuggestionClick = (suggestion) => {
     const { lat, lon } = suggestion;
-    setSelectedPosition({ lat: parseFloat(lat), lng: parseFloat(lon) });
-    setSearchText(suggestion.display_name); // Update search bar with the selected name
-    setSuggestions([]); // Clear suggestions after selection
     setPosition({ lat: parseFloat(lat), lng: parseFloat(lon) });
+    setSearchText(suggestion.display_name); // Update search bar with selected location
+    setSuggestions([]); // Clear suggestions after selection
+  };
 
-    refetch();
+  // Handle timeframe change
+  const handleTimeFrameChange = (event) => {
+    setTimeFrame(event.target.value); // Update state
   };
 
   // Update the current time every second
@@ -209,20 +86,30 @@ function LocationSearch() {
     return () => clearInterval(interval); // Cleanup interval on unmount
   }, []);
 
-  if (isLoading) return <Spinner />;
   return (
     <div className="flex gap-4 relative min-h-screen">
+      {isLoading && <Spinner />}
       {/* Left Panel */}
-      <div className="flex flex-col gap-6 border rounded-3xl backdrop-blur-md bg-white/10 h-fit p-6 w-full md:w-1/2">
+      <div
+        className={
+          data
+            ? "flex flex-col gap-6 border rounded-3xl backdrop-blur-md bg-white/10 h-fit p-6 w-full md:w-[28rem]"
+            : "flex flex-col gap-6 border rounded-3xl backdrop-blur-md bg-white/10 h-fit p-6 w-full md:w-1/2 absolute left-80 top-32"
+        }
+      >
         {/* Search Bar */}
-        <div className="relative">
+        <div className={"relative"}>
           <div className="flex items-center gap-3 border border-gray-500/50 rounded-full px-4 py-2 backdrop-brightness-75 text-white">
             <VscSearch />
             <input
               type="text"
               value={searchText}
               onChange={handleInputChange}
-              placeholder="Search a location"
+              placeholder={
+                data
+                  ? "Search a location"
+                  : "Please search a location to Get Started"
+              }
               className="bg-transparent w-full text-sm placeholder-white text-white outline-none"
             />
           </div>
@@ -243,7 +130,7 @@ function LocationSearch() {
           )}
         </div>
 
-        {selectedPosition ? (
+        {data ? (
           <div className="text-white space-y-2">
             <div>
               <div className="flex items-center gap-2">
@@ -255,28 +142,23 @@ function LocationSearch() {
               </div>
             </div>
             <div className="text-5xl font-bold">
-              {data?.sensorData[0].temperature} °C
+              {data?.sensorData[0]?.temperature} °C
             </div>
             <div className="text-gray-300 text-lg">{currentTime}</div>
           </div>
-        ) : (
-          ""
-        )}
-        {selectedPosition ? (
-          <AirQualityGauge pm25={data?.sensorData[0]?.pm25} />
-        ) : (
-          ""
-        )}
+        ) : null}
+        {data ? <AirQualityGauge pm25={data?.sensorData[0]?.pm25} /> : null}
       </div>
 
-      {selectedPosition ? (
+      {/* Right Panel */}
+      {data && (
         <div className="flex flex-col gap-4 border rounded-3xl backdrop-blur-3xl h-fit p-4 w-fit md:w-1/2">
-          <div className="w-fit h-fit relative ">
+          <div className="w-fit h-fit relative">
             <select
               id="dropdown"
               name="dropdown"
               value={timeFrame}
-              onChange={handleChange}
+              onChange={handleTimeFrameChange}
               className="w-full bg-inherit border border-inherit text-gray-200 text-sm rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 block p-2.5  backdrop-brightness-50"
             >
               <option value="daily" className="bg-slate-800 text-gray-900">
@@ -289,9 +171,6 @@ function LocationSearch() {
                 monthly
               </option>
             </select>
-            <p className="mt-4 text-sm text-gray-500">
-              {/* Selected: {selectedOption || "None"} */}
-            </p>
           </div>
           <div className="backdrop-brightness-50 rounded-2xl">
             <Graph
@@ -299,7 +178,7 @@ function LocationSearch() {
               independant="createdAt"
               dependant="temperature"
               color="#2450ca"
-              title="Concentration"
+              title="Temperature"
             />
           </div>
           <div className="backdrop-brightness-50 rounded-2xl">
@@ -308,30 +187,19 @@ function LocationSearch() {
               independant="createdAt"
               dependant="humidity"
               color="#e91eac"
-              title="Concentration"
+              title="Humidity"
             />
           </div>
-          <div className="backdrop-brightness-50 rounded-2xl ">
+          <div className="backdrop-brightness-50 rounded-2xl">
             <Graph
               data={modifiedData}
               independant="createdAt"
               dependant="pm25"
               color="#10f308"
-              title="Concentration"
+              title="PM25"
             />
           </div>
-          {/* <div className="backdrop-brightness-50 rounded-2xl">
-            <Graph
-              data={modifiedData}
-              independant="createdAt"
-              dependant="pm25"
-              color="#e2f110"
-              title="Concentration"
-            />
-          </div> */}
         </div>
-      ) : (
-        ""
       )}
     </div>
   );

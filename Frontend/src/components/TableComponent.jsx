@@ -4,7 +4,6 @@ import { FaStar } from "react-icons/fa";
 import { LiaLocationArrowSolid } from "react-icons/lia";
 import AirQualityGauge from "./AirQualityGauge";
 import { BiArrowBack } from "react-icons/bi";
-import SensorPage from "./SensorPage";
 import { useNavigate } from "react-router";
 
 const TableComponent = ({ data }) => {

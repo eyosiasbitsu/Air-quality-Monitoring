@@ -10,6 +10,7 @@ import RegisterSensor from "./pages/RegisterSensor";
 import BackGround from "./components/BackGround";
 import SensorData from "./pages/SensorData";
 import SensorDetail from "./pages/SensorDetail";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   const backgroundStyle = {
@@ -39,9 +40,11 @@ const App = () => {
             <Route path="/" element={<BackGround />}>
               <Route index element={<SensorData />} />
               <Route path="/signin" element={<SignIn />} />
-              <Route path="/register" element={<RegisterSensor />} />
-              <Route path="/sensorpage" element={<DashboardLayout />} />
-              <Route path="/sensorpage/:id" element={<SensorDetail />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path="/register" element={<RegisterSensor />} />
+                <Route path="/sensorpage" element={<DashboardLayout />} />
+                <Route path="/sensorpage/:id" element={<SensorDetail />} />
+              </Route>
             </Route>
           </Routes>
         </Router>

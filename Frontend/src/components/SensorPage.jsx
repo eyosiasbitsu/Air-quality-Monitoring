@@ -15,9 +15,12 @@ const SensorPage = () => {
     },
   });
 
-  console.log(data);
-  if (isLoading) return <Spinner />;
-  return <SensorList data={data} />;
+  return (
+    <>
+      {isLoading && <Spinner />}
+      <SensorList data={data} />
+    </>
+  );
 };
 
 export default SensorPage;

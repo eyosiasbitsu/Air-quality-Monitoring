@@ -28,7 +28,7 @@ const SensorList = ({ data }) => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-full bg-inherit backdrop-blur-md shadow-2xl shadow-black rounded-3xl md:p-6">
+    <div className="flex flex-col justify-center items-center w-full bg-inherit backdrop-blur-md shadow-2xl shadow-black rounded-3xl md:p-6 md:max-w-[46rem]">
       <div className="w-full overflow-x-auto">
         <div className="w-full rounded-2xl bg-inherit overflow-hidden text-gray-200 border-spacing-0">
           <div className="flex justify-center">
@@ -37,7 +37,7 @@ const SensorList = ({ data }) => {
             </span>
           </div>
           <div>
-            {paginatedData.map((row, index) => (
+            {paginatedData?.map((row, index) => (
               <div
                 key={index}
                 className="flex border-b border-gray-300 p-3 bg-inherit w-auto min-w-[28rem] gap-10 justify-between"
@@ -75,7 +75,7 @@ const SensorList = ({ data }) => {
         </button>
         <button
           onClick={handleNext}
-          disabled={(currentPage + 1) * itemsPerPage >= data.length}
+          disabled={(currentPage + 1) * itemsPerPage >= data?.length}
           className="bg-gray-500 text-gray-200 px-4 py-2 rounded-lg disabled:opacity-50"
         >
           Next
